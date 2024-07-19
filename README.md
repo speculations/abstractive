@@ -1,18 +1,5 @@
 <br>
 
-A basic template for Python projects; the structure and programs are in line with language standards and team norms.
-
-<br>
-
-_develop_<br>
-[![Templates](https://github.com/thetemplates/python-basic/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/thetemplates/python-basic/actions/workflows/main.yml)
-
-_master_<br>
-[![Templates](https://github.com/thetemplates/python-basic/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/thetemplates/python-basic/actions/workflows/main.yml)
-
-<br>
-<br>
-
 ## Environments
 
 ### Remote Development
@@ -117,15 +104,10 @@ The `.pylintrc` file of this template project has been **amended to adhere to te
 
 ### pytest
 
-Study the programs
-
-* src.algorithms.random
-* tests.algorithms.test_random
-
-Subsequently, test the program `src.algorithms.random` via the command
+Test directive:
 
 ```shell
-python -m pytest tests/algorithms/test_random.py
+python -m pytest tests/...
 ```
 
 
@@ -137,51 +119,17 @@ python -m pytest tests/algorithms/test_random.py
 For code & complexity analysis.  A directive of the form
 
 ```bash
-python -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/data
+python -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/...
 ```
 
 inspects issues in relation to logic (F7), syntax (Python E9, Flake F7), mathematical formulae symbols (F63), undefined variable names (F82).  Additionally
 
 ```shell
-python -m flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/data
+python -m flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/...
 ```
 
 inspects complexity.
 
-
-<br>
-<br>
-
-## Delivering Assets
-
-This example illustrates automatic asset delivery.  The diagram outlines the delivery routes & actions.
-
-
-<img src="/assets/beforehand-static.png" alt="Asset Delivery">
-
-
-Delivery to Amazon ECR (Elastic Container Registry) is conditional.  **If you do not have an Amazon account and/or** you have not set up the GitHub Secrets 
-
-* AWS_ENTRY
-* AWS_ARN_ECR_ACTIONS: Amazon ECR & GitHub Actions interaction role
-* AWS_REGION: region code
-
-that enable delivery to Amazon ECR via the directive
-
-```yaml
-  with:
-    role-to-assume: arn:aws:iam::${{ secrets.AWS_ENTRY }}:role/${{ secrets.AWS_ARN_ECR_ACTIONS }}
-    aws-region: ${{ secrets.AWS_REGION }}
-```
-
-then set the `ecr` section of [main.yml](.github/workflows/main.yml) to *false*, i.e.,
-
-```yaml
-  ecr:
-    name: Amazon Elastic Container Registry
-    needs: build
-    if: ${{ false }}
-```
 
 <br>
 <br>
