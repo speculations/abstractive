@@ -1,0 +1,14 @@
+dask[complete]>=2024.5.1
+dask-expr
+graphviz
+pydot
+numpy>=1.26
+pandas>=2.1
+scipy>=1.13.1
+requests>=2.32.2
+PyYAML
+pytest
+coverage
+pytest-cov
+pylint
+flake8
