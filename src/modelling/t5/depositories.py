@@ -14,7 +14,8 @@ class Depositories:
         Constructor
         """
 
-    def exc(self, path):
+    @staticmethod
+    def exc(path):
         """
 
         :param path: The directory path that will be re-created.
