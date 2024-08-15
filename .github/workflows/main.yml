@@ -14,7 +14,7 @@ jobs:
       max-parallel: 4
       fail-fast: false
       matrix:
-        python-version: [3.12]
+        python-version: ['3.10']
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,13 @@ jobs:
           printf "\n"
           echo "Issues in relation to logic (F7), syntax (Python E9, Flake F7), mathematical
           formulae symbols (F63), undefined variable names (F82):"
-                    
+          
+          printf "\n src/data "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/data
+          
+          printf "\n src/elements "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/elements
+          
           printf "\n src/functions "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/functions
           
@@ -48,6 +54,12 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           printf "\n\n"
           echo "Complexity issues:"
+          
+          printf "\n src/data "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/data
+          
+          printf "\n src/elements "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/elements
           
           printf "\n src/functions "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/functions
@@ -57,6 +69,12 @@ jobs:
           printf "\n"
           echo "============================= pylint session starts =============================="
           
+          printf "\n Package src/data"
+          pylint --rcfile .pylintrc src/data
+          
+          printf "\n Package src/elements"
+          pylint --rcfile .pylintrc src/elements
+          
           printf "\n Package src/functions"
           pylint --rcfile .pylintrc src/functions
 
@@ -65,16 +83,16 @@ jobs:
           printf "\n"
           echo "============================= pytest session starts =============================="
           
-          printf "\n pytest tests/..."
-          # pytest -o python_files=test_*
+          printf "\n pytest tests/algorithms/"
+          pytest -o python_files=test_*
 
       - name: Coverage with pytest-cov
         run: |
           printf "\n "
           echo "============================= coverage session starts =============================="
           
-          printf "\n Coverage tests/..."
-          # pytest --cov-report term-missing  --cov src/.../ tests/.../
+          printf "\n Coverage tests/algorithms/"
+          pytest --cov-report term-missing  --cov src/algorithms/ tests/algorithms/
 
   packages:
     name: GitHub Packages Container Registry
