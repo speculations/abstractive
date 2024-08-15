@@ -1,8 +1,8 @@
 import logging
-import ray.data
-import datasets
-import transformers
 
+import datasets
+import ray.data
+import transformers
 
 import src.elements.variable as vr
 import src.modelling.t5.parameters as pr
@@ -32,6 +32,10 @@ class Rays:
         self.__logger = logging.getLogger(__name__)
 
     def __data(self):
+        """
+
+        :return:
+        """
 
         return {
             'train': ray.data.from_huggingface(self.__source['train']),
@@ -39,10 +43,10 @@ class Rays:
             'test': ray.data.from_huggingface(self.__source['test'])
         }
 
-    def exc(self):
+    def exc(self) -> dict[str, ray.data.dataset.MaterializedDataset]:
+        """
 
-        data: dict[str, ray.data.dataset.MaterializedDataset] = self.__data()
-        self.__logger.info(type(data))
-        self.__logger.info(data)
+        :return:
+        """
 
-        # [self.__tokenization(data[k]) for k, _ in data.keys()]
+        return self.__data()
