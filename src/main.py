@@ -3,42 +3,57 @@ import logging
 import os
 import sys
 
+import datasets
+import torch
 
-def main():
+
+def main() -> None:
     """
     Entry point
+
+    :return:
+        None
     """
 
-    # Logging
     logger: logging.Logger = logging.getLogger(__name__)
-    logger.info('Templates')
 
-    # A random value and its square root
-    value: float = random.exc()
-    logger.info('The square root of %s: %s', value, roots.exc(value=value))
+    # Device Selection: Setting a graphics processing unit as the default device
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    # Deleting __pycache__
+    # Device Message
+    if device == 'cuda':
+        logger.info('# of %s devices: %s', device.upper(),
+                    torch.cuda.device_count())
+    else:
+        logger.info('Device: %s', device.upper())
+
+    # Explorations
+    source: datasets.DatasetDict = src.data.source.Source().exc()
+    src.modelling.interface.Interface(source=source, device=device).exc()
+
+    # Delete Cache Points
     src.functions.cache.Cache().exc()
 
 
 if __name__ == '__main__':
 
-    # Setting-up
+    # Paths
     root = os.getcwd()
     sys.path.append(root)
     sys.path.append(os.path.join(root, 'src'))
 
+    # Logging
     logging.basicConfig(level=logging.INFO,
                         format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
                         datefmt='%Y-%m-%d %H:%M:%S')
 
-    # Classes
-    import src.functions.cache
-    import src.algorithms.random
-    import src.algorithms.roots
+    # Activate graphics processing units
+    os.environ['CUDA_VISIBLE_DEVICES']='0'
+    os.environ['TOKENIZERS_PARALLELISM']='true'
 
-    # Instances
-    random = src.algorithms.random.Random()
-    roots = src.algorithms.roots.Roots()
+    # Modules
+    import src.functions.cache
+    import src.data.source
+    import src.modelling.interface
 
     main()
