@@ -1,6 +1,7 @@
 """
 Module config.py
 """
+import os
 
 
 class Config:
@@ -12,13 +13,16 @@ class Config:
     """
 
     def __init__(self) -> None:
-        pass
-
-    def seed(self) -> int:
         """
-        The seed for random number generators
-
-        :return: An integer
+        Constructor
         """
 
-        return 5
+        # Warehouse
+        self.warehouse = os.path.join(os.getcwd(), 'warehouse')
+
+        # For reproducibility purposes
+        self.seed = 5
+
+        # For data splitting purposes
+        self.fraction_validate = 0.2
+        self.fraction_test = 0.25
