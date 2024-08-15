@@ -1,3 +1,4 @@
+"""Module rays.py"""
 import logging
 
 import datasets
@@ -9,6 +10,9 @@ import src.modelling.t5.parameters as pr
 
 
 class Rays:
+    """
+    Ray data set.
+    """
 
     def __init__(self, source: datasets.DatasetDict, variable: vr.Variable, parameters: pr.Parameters):
         """
@@ -31,17 +35,21 @@ class Rays:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __data(self):
+    def __data(self) -> dict[str, ray.data.dataset.MaterializedDataset]:
         """
 
         :return:
         """
 
-        return {
+        data = {
             'train': ray.data.from_huggingface(self.__source['train']),
             'validate': ray.data.from_huggingface(self.__source['validate']),
             'test': ray.data.from_huggingface(self.__source['test'])
         }
+
+        self.__logger.info(data)
+
+        return data
 
     def exc(self) -> dict[str, ray.data.dataset.MaterializedDataset]:
         """
