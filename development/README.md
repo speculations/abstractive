@@ -6,8 +6,8 @@
 
 For this Python project/template, the remote development environment requires
 
-* [Dockerfile](.devcontainer/Dockerfile)
-* [requirements.txt](.devcontainer/requirements.txt)
+* [Dockerfile](../.devcontainer/Dockerfile)
+* [requirements.txt](../.devcontainer/requirements.txt)
 
 An image is built via the command
 
@@ -48,7 +48,7 @@ i.e., -w, must be inline with this project's top directory.  Get the name of the
 docker ps --all
 ```
 
-Never deploy a root container, study the production [Dockerfile](Dockerfile); cf. [/.devcontainer/Dockerfile](.devcontainer/Dockerfile)
+Never deploy a root container, study the production [Dockerfile](../Dockerfile); cf. [/.devcontainer/Dockerfile](../.devcontainer/Dockerfile)
 
 <br>
 
@@ -72,7 +72,7 @@ IDEA** set up involves connecting to a machine's Docker [daemon](https://www.jet
 
 ## Code Analysis
 
-The GitHub Actions script [main.yml](.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.
+The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.
 
 The sections herein outline remote code analysis.
 
