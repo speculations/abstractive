@@ -7,6 +7,7 @@ import ray.tune.schedulers as rts
 import transformers
 
 import src.elements.variable as vr
+import src.modelling.t5.parameters as pr
 
 
 class Settings:
@@ -14,17 +15,16 @@ class Settings:
     Class Settings
     """
 
-    def __init__(self, variable: vr.Variable):
+    def __init__(self, variable: vr.Variable, parameters: pr.Parameters):
         """
 
         :param variable: A suite of values for machine learning
                          model development
+        :param parameters: T5 specific parameters
         """
 
         self.__variable = variable
-
-        # Re-visit
-        self.__perturbation_interval = 2
+        self.__parameters = parameters
 
     def param_space(self):
         """
@@ -34,10 +34,10 @@ class Settings:
         """
 
         return {
-            'learning_rate': 0.05,
-            'weight_decay': 0.05,
+            'learning_rate': self.__variable.LEARNING_RATE,
+            'weight_decay': self.__variable.WEIGHT_DECAY,
             'per_device_train_batch_size': 2*self.__variable.TRAIN_BATCH_SIZE,
-            'num_train_epochs': ray.tune.choice([2, 3, 4, 5])
+            'num_train_epochs': ray.tune.choice([2, 3])
         }
 
     def scheduler(self):
@@ -52,11 +52,11 @@ class Settings:
         return rts.PopulationBasedTraining(
             time_attr='training_iteration',
             metric='eval_loss', mode='min',
-            perturbation_interval=self.__perturbation_interval,
+            perturbation_interval=self.__parameters.perturbation_interval,
             hyperparam_mutations={
                 'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
                 'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
-                'per_device_train_batch_size': [16, 32, 64]
+                'per_device_train_batch_size': [16, 32]
             },
             quantile_fraction=0.25,
             resample_probability=0.25
@@ -91,11 +91,11 @@ class Settings:
             save_strategy='epoch',
             logging_strategy='epoch',
             learning_rate=self.__variable.LEARNING_RATE,
-            weight_decay=0.01,
+            weight_decay=self.__variable.WEIGHT_DECAY,
             per_device_train_batch_size=self.__variable.TRAIN_BATCH_SIZE,
             per_device_eval_batch_size=self.__variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=self.__variable.EPOCHS,
-            max_steps=-1,
+            max_steps=self.__variable.MAX_STEPS,
             warmup_steps=0,
             logging_dir=os.path.join(self.__variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
             no_cuda=False,
