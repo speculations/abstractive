@@ -7,6 +7,7 @@ import ray.data
 
 import config
 import src.elements.variable as vr
+import src.modelling.t5.assemble
 import src.modelling.t5.depositories
 import src.modelling.t5.intelligence
 import src.modelling.t5.parameters as pr
@@ -68,7 +69,17 @@ class Steps:
         # Re-write
         src.modelling.t5.depositories.Depositories().exc(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
 
-        # Temporary
+        # Temporary: Data
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.t5.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
         self.__logger.info(rays)
+
+        # Temporary: Modelling
+        results = src.modelling.t5.assemble.Assemble(data=rays, variable=self.__variable, parameters=self.__parameters).__call__()
+        self.__logger.info(results.__dict__)
+        self.__logger.info(results.__dir__())
+
+        best = results.get_best_result()
+        self.__logger.info(best.checkpoint)
+        self.__logger.info(best.best_checkpoints)
+        self.__logger.info(best.metrics_dataframe)
