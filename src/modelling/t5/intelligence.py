@@ -1,17 +1,15 @@
 """Module intelligence.py"""
 import logging
-import os
 
-import datasets
-import transformers
 import ray.train
+import transformers
 
 import src.elements.variable as vr
 import src.modelling.t5.metrics
-import src.modelling.t5.skeleton
 import src.modelling.t5.parameters as pr
-import src.modelling.t5.settings
 import src.modelling.t5.preprocessing
+import src.modelling.t5.settings
+import src.modelling.t5.skeleton
 
 
 class Intelligence:
