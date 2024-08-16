@@ -89,6 +89,7 @@ class Settings:
             do_eval=True,
             eval_strategy='epoch',
             save_strategy='epoch',
+            logging_strategy='epoch',
             learning_rate=self.__variable.LEARNING_RATE,
             weight_decay=0.01,
             per_device_train_batch_size=self.__variable.TRAIN_BATCH_SIZE,
