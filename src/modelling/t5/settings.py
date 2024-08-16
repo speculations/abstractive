@@ -1,10 +1,8 @@
 """Module settings"""
-import os
 
 import ray
 import ray.tune
 import ray.tune.schedulers as rts
-import transformers
 
 import src.elements.variable as vr
 import src.modelling.t5.parameters as pr
@@ -44,7 +42,7 @@ class Settings:
         """
         https://docs.ray.io/en/latest/tune/api/doc/ray.tune.schedulers.PopulationBasedTraining.html
 
-        Leads on from hp_space
+        Leads on from param_space
 
         :return:
         """
@@ -73,37 +71,4 @@ class Settings:
         return ray.tune.CLIReporter(
             parameter_columns=['learning_rate', 'weight_decay', 'per_device_training_batch_size', 'num_train_epochs'],
             metric_columns=['eval_loss', 'rouge1', 'rouge2', 'rougeLsum', 'median']
-        )
-
-    def args(self) -> transformers.Seq2SeqTrainingArguments:
-        """
-        https://huggingface.co/docs/transformers/v4.44.0/en/main_classes/trainer#transformers.Seq2SeqTrainingArguments
-        Opt foci: learning rate, weight decay, the batch sizes, number of training epochs
-
-        :return:
-        """
-
-        return transformers.Seq2SeqTrainingArguments(
-            output_dir=self.__variable.MODEL_OUTPUT_DIRECTORY,
-            do_train=True,
-            do_eval=True,
-            eval_strategy='epoch',
-            save_strategy='epoch',
-            logging_strategy='epoch',
-            learning_rate=self.__variable.LEARNING_RATE,
-            weight_decay=self.__variable.WEIGHT_DECAY,
-            per_device_train_batch_size=self.__variable.TRAIN_BATCH_SIZE,
-            per_device_eval_batch_size=self.__variable.VALIDATE_BATCH_SIZE,
-            num_train_epochs=self.__variable.EPOCHS,
-            max_steps=self.__variable.MAX_STEPS,
-            warmup_steps=0,
-            logging_dir=os.path.join(self.__variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
-            no_cuda=False,
-            seed=5,
-            save_total_limit=2,
-            skip_memory_metrics=True,
-            load_best_model_at_end=True,
-            predict_with_generate=True,
-            fp16=True,
-            push_to_hub=False
         )
