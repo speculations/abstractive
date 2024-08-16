@@ -72,10 +72,9 @@ class Steps:
         # Temporary: Data
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.t5.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
-        self.__logger.info(rays)
 
         # Temporary: Modelling
-        results = src.modelling.t5.assemble.Assemble(data=rays, variable=self.__variable, parameters=self.__parameters).__call__()
+        results = src.modelling.t5.assemble.Assemble(data=rays, variable=self.__variable, parameters=self.__parameters).exc()
         self.__logger.info(results.__dict__)
         self.__logger.info(results.__dir__())
 
