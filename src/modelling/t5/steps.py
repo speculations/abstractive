@@ -71,12 +71,4 @@ class Steps:
         # Temporary
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.t5.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
-
-        # Preprocessing Instance: For tokenization.  Converting each split into a T5 tokenized split
-        # preprocessing = src.modelling.t5.preprocessing.Preprocessing(variable=self.__variable, parameters=self.parameters)
-        # data: datasets.DatasetDict = self.__source.map(preprocessing.exc, batched=True)
-
-        # Model
-        # intelligence = src.modelling.t5.intelligence.Intelligence(variable=self.__variable, parameters=self.parameters)
-        # model = intelligence(data=data)
-        # self.__logger.info(dir(model))
+        self.__logger.info(rays)
