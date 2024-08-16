@@ -69,10 +69,8 @@ class Steps:
         src.modelling.t5.depositories.Depositories().exc(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
 
         # Temporary
-        self.__logger.info(self.__source['train'].shape)
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.t5.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
-        self.__logger.info(rays['train'].count())
 
         # Preprocessing Instance: For tokenization.  Converting each split into a T5 tokenized split
         # preprocessing = src.modelling.t5.preprocessing.Preprocessing(variable=self.__variable, parameters=self.parameters)
