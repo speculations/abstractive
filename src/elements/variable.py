@@ -23,6 +23,11 @@ class Variable(typing.NamedTuple):
     LEARNING_RATE: float
         The learning rate; default 2e-05.
 
+    WEIGHT_DECAY: float
+        https://huggingface.co/docs/transformers/v4.44.0/en/main_classes/trainer
+            #transformers.Seq2SeqTrainingArguments.weight_decay
+        https://arxiv.org/abs/1711.05101
+
     MAX_NEW_TOKENS: int
         [max_new_tokens](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/\
             text_generation#transformers.GenerationConfig)
@@ -56,7 +61,8 @@ class Variable(typing.NamedTuple):
     VALIDATE_BATCH_SIZE: int = 16
     TEST_BATCH_SIZE: int = 16
     EPOCHS: int = 8
-    LEARNING_RATE: float = 2e-05
+    LEARNING_RATE: float = 0.005
+    WEIGHT_DECAY: float = 0.05
     MAX_NEW_TOKENS: int = 32
     MAX_LENGTH_INPUT: int = 1024
     MAX_LENGTH_TARGET: int = 32
