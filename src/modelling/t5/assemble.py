@@ -1,17 +1,17 @@
 """Module assemble.py"""
 import ray
 import ray.data
-import ray.train.torch
 import ray.train.huggingface.transformers as rt
+import ray.train.torch
 import ray.tune
 import ray.tune.schedulers
 import transformers
 
 import src.elements.variable as vr
-import src.modelling.t5.parameters as pr
-import src.modelling.t5.settings
 import src.modelling.t5.intelligence
 import src.modelling.t5.metrics
+import src.modelling.t5.parameters as pr
+import src.modelling.t5.settings
 
 
 class Assemble:
@@ -34,8 +34,8 @@ class Assemble:
         self.__parameters = parameters
 
         # Settings
-        self.__settings = src.modelling.t5.settings.Settings(variable=self.__variable)
         self.__metrics = src.modelling.t5.metrics.Metrics(parameters=self.__parameters)
+        self.__settings = src.modelling.t5.settings.Settings(variable=self.__variable, parameters=self.__parameters)
         self.__intelligence = src.modelling.t5.intelligence.Intelligence(variable=variable, parameters=parameters)
 
     def __trainer(self):
