@@ -55,7 +55,7 @@ class Assemble:
         )
 
 
-    def exc(self):
+    def __call__(self):
         """
         https://docs.ray.io/en/latest/tune/api/doc/ray.tune.TuneConfig.html
         https://docs.ray.io/en/latest/train/api/doc/ray.train.RunConfig.html
