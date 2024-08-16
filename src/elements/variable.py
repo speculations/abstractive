@@ -41,6 +41,10 @@ class Variable(typing.NamedTuple):
     N_GPU: int
         The number of graphics processing units
 
+    MAX_STEPS: int
+        https://huggingface.co/docs/transformers/v4.44.0/en/main_classes/trainer
+            #transformers.Seq2SeqTrainingArguments.max_steps
+
     MODEL_OUTPUT_DIRECTORY: str
         A directory for model outputs
 
@@ -58,5 +62,6 @@ class Variable(typing.NamedTuple):
     MAX_LENGTH_TARGET: int = 32
     N_CPU: int = 8
     N_GPU: int = 1
+    MAX_STEPS: int = -1
     MODEL_OUTPUT_DIRECTORY: str = ''
     DEVICE: str = ''
