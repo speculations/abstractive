@@ -2,11 +2,16 @@
 import ray
 import ray.data
 import ray.train.torch
+import ray.train.huggingface.transformers as rt
 import ray.tune
 import ray.tune.schedulers
+import transformers
 
 import src.elements.variable as vr
+import src.modelling.t5.parameters as pr
 import src.modelling.t5.settings
+import src.modelling.t5.intelligence
+import src.modelling.t5.metrics
 
 
 class Assemble:
@@ -15,22 +20,43 @@ class Assemble:
     """
 
     def __init__(self, data: dict[str, ray.data.dataset.MaterializedDataset],
-                 variable: vr.Variable):
+                 variable: vr.Variable, parameters: pr.Parameters):
         """
 
-        :param data:
-        :param variable:
+        :param data: The project's data; parts train, validate, test
+        :param variable: A suite of values for machine learning
+                         model development
+        :param parameters: T5 specific parameters
         """
 
         self.__data = data
         self.__variable = variable
+        self.__parameters = parameters
 
         # Settings
         self.__settings = src.modelling.t5.settings.Settings(variable=self.__variable)
+        self.__metrics = src.modelling.t5.metrics.Metrics(parameters=self.__parameters)
+        self.__intelligence = src.modelling.t5.intelligence.Intelligence(variable=variable, parameters=parameters)
 
-        # ... steps & epochs
-        max_steps_per_epoch = self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
-        max_steps = max_steps_per_epoch * self.__variable.EPOCHS
+    def __trainer(self):
+        """
+        https://huggingface.co/docs/transformers/main_classes/trainer#transformers.Seq2SeqTrainer
+
+        :return:
+        """
+
+        trainer = transformers.Seq2SeqTrainer(
+            model_init=self.__intelligence.model,
+            args=self.__settings.args(),
+            train_dataset=self.__intelligence.iterable(segment='train', batch_size=self.__variable.TRAIN_BATCH_SIZE),
+            eval_dataset=self.__intelligence.iterable(segment='eval', batch_size=self.__variable.VALIDATE_BATCH_SIZE),
+            tokenizer=self.__parameters.tokenizer,
+            data_collator=self.__intelligence.data_collator(),
+            compute_metrics=self.__metrics.exc
+        )
+        trainer.add_callback(rt.RayTrainReportCallback())
+        trainer = rt.prepare_trainer(trainer)
+        trainer.train()
 
     def __trainable(self) -> ray.train.torch.TorchTrainer:
         """
@@ -42,7 +68,7 @@ class Assemble:
         """
 
         return ray.train.torch.TorchTrainer(
-
+            self.__trainer,
             scaling_config=ray.train.ScalingConfig(
                 num_workers=self.__variable.N_GPU,
                 use_gpu=True),
@@ -58,7 +84,6 @@ class Assemble:
             )
         )
 
-
     def __call__(self):
         """
         https://docs.ray.io/en/latest/tune/api/doc/ray.tune.TuneConfig.html
@@ -68,7 +93,7 @@ class Assemble:
         :return:
         """
 
-        ray.tune.Tuner(
+        tuner = ray.tune.Tuner(
             trainable=self.__trainable,
             param_space=self.__settings.param_space(),
             tune_config=ray.tune.TuneConfig(
@@ -84,3 +109,5 @@ class Assemble:
             )
 
         )
+
+        return tuner.fit()
