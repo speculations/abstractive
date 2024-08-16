@@ -60,13 +60,7 @@ class Assemble:
             datasets={
                 'train': self.__data['train'],
                 'eval': self.__data['validate']
-            },
-            run_config=ray.train.RunConfig(
-                checkpoint_config=ray.train.CheckpointConfig(
-                    num_to_keep=1,
-                    checkpoint_score_attribute='eval_loss',
-                    checkpoint_score_order='min')
-            )
+            }
         )
 
         tuner = ray.tune.Tuner(
