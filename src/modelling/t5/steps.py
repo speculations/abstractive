@@ -50,7 +50,7 @@ class Steps:
         variable = vr.Variable()
 
         # ... steps & epochs
-        max_steps_per_epoch = self.__source['train'].shape[0] // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
+        max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)
         max_steps = max_steps_per_epoch * self.__n_epochs
 
         # Update
