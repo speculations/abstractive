@@ -23,8 +23,11 @@ class Assemble:
         """
 
         self.__data = data
+        self.__variable = variable
 
-        self.__settings = src.modelling.t5.settings.Settings(variable=variable)
+        # Setting-up
+        self.__settings = src.modelling.t5.settings.Settings(variable=self.__variable)
+        # self.__data['train'].count() //
 
     def __trainable(self) -> ray.train.torch.TorchTrainer:
         """
@@ -37,7 +40,7 @@ class Assemble:
 
         return ray.train.torch.TorchTrainer(
             scaling_config=ray.train.ScalingConfig(
-                num_workers=1,
+                num_workers=self.__variable.N_GPU,
                 use_gpu=True),
             datasets={
                 'train': self.__data['train'],
