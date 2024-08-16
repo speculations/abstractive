@@ -25,9 +25,12 @@ class Assemble:
         self.__data = data
         self.__variable = variable
 
-        # Setting-up
+        # Settings
         self.__settings = src.modelling.t5.settings.Settings(variable=self.__variable)
-        # self.__data['train'].count() //
+
+        # ... steps & epochs
+        max_steps_per_epoch = self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
+        max_steps = max_steps_per_epoch * self.__variable.EPOCHS
 
     def __trainable(self) -> ray.train.torch.TorchTrainer:
         """
@@ -39,6 +42,7 @@ class Assemble:
         """
 
         return ray.train.torch.TorchTrainer(
+
             scaling_config=ray.train.ScalingConfig(
                 num_workers=self.__variable.N_GPU,
                 use_gpu=True),
