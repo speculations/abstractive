@@ -7,7 +7,7 @@ import config
 
 class Variable(typing.NamedTuple):
     """
-    Generic attributes for machine learning model development
+    A suite of values for machine learning model development
 
     Attributes
     ----------
@@ -30,6 +30,9 @@ class Variable(typing.NamedTuple):
         https://huggingface.co/docs/transformers/v4.44.0/en/main_classes/trainer
             #transformers.Seq2SeqTrainingArguments.weight_decay
         https://arxiv.org/abs/1711.05101
+
+    PERTURBATION_INTERVAL: int
+        https://docs.ray.io/en/latest/tune/api/doc/ray.tune.schedulers.PopulationBasedTraining.html
 
     MAX_NEW_TOKENS: int
         [max_new_tokens](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/\
@@ -63,6 +66,7 @@ class Variable(typing.NamedTuple):
     EPOCHS: int = 2
     LEARNING_RATE: float = 0.005
     WEIGHT_DECAY: float = 0.05
+    PERTURBATION_INTERVAL: int = 50
     MAX_NEW_TOKENS: int = 32
     MAX_LENGTH_INPUT: int = 1024
     MAX_LENGTH_TARGET: int = 32
