@@ -28,7 +28,6 @@ class Steps:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-
     def exc(self):
         """
         model.save_model()
