@@ -4,14 +4,13 @@ import logging
 import datasets
 import ray.data
 
-
+import src.elements.parameters as pr
+import src.elements.variable as vr
 import src.modelling.assemble
 import src.modelling.depositories
 import src.modelling.intelligence
-import src.modelling.parameters as pr
 import src.modelling.preprocessing
 import src.modelling.rays
-import src.modelling.custom
 
 
 class Steps:
@@ -28,7 +27,7 @@ class Steps:
         self.__source = source
 
         # A set of values for machine learning model development
-        self.__variable = src.modelling.custom.Custom().custom
+        self.__variable = vr.Variable()
         self.__parameters = pr.Parameters()
 
         # Logging
