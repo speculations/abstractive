@@ -65,7 +65,7 @@ class Architecture:
             train_dataset=intelligence.iterable(segment='train', batch_size=variable.TRAIN_BATCH_SIZE),
             eval_dataset=intelligence.iterable(segment='eval', batch_size=variable.VALIDATE_BATCH_SIZE),
             tokenizer=parameters.tokenizer,
-            data_collator=intelligence.data_collator(),
+            data_collator=intelligence.collator(),
             compute_metrics=metrics.exc
         )
         trainer.add_callback(rt.RayTrainReportCallback())
