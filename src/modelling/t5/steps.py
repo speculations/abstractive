@@ -9,9 +9,9 @@ import src.modelling.assemble
 import src.modelling.depositories
 import src.modelling.intelligence
 import src.modelling.parameters as pr
-import src.modelling.t5.preprocessing
-import src.modelling.t5.rays
-import src.modelling.t5.custom
+import src.modelling.preprocessing
+import src.modelling.rays
+import src.modelling.custom
 
 
 class Steps:
@@ -28,7 +28,7 @@ class Steps:
         self.__source = source
 
         # A set of values for machine learning model development
-        self.__variable = src.modelling.t5.custom.Custom().custom
+        self.__variable = src.modelling.custom.Custom().custom
         self.__parameters = pr.Parameters()
 
         # Logging
@@ -48,7 +48,7 @@ class Steps:
         src.modelling.depositories.Depositories().exc(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
 
         # Temporary: Data
-        rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.t5.rays.Rays(
+        rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
 
         # Temporary: Modelling
