@@ -5,7 +5,7 @@ import ray.train
 import transformers
 import torch
 
-import src.elements.parameters as pr
+import collections
 import src.elements.variable as vr
 
 
@@ -14,12 +14,14 @@ class Intelligence:
     The model development class.
     """
 
-    def __init__(self):
-        """
-        Constructor
+    def __init__(self, parameters: collections.namedtuple(typename='ModelArchitectureParameters',
+                                                          field_names=['input_prefix', 'checkpoint', 'tokenizer'])):
         """
 
-        self.__parameters = pr.Parameters()
+        :param parameters: T5 specific parameters
+        """
+
+        self.__parameters = parameters
         self.__variable = vr.Variable()
 
         # Logging
