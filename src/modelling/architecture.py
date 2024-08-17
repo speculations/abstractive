@@ -1,14 +1,13 @@
 """Module architecture.py"""
 import os
-import transformers
 
 import ray.train.huggingface.transformers as rt
+import transformers
 
-import src.modelling.metrics
-import src.modelling.intelligence
-
-import src.modelling.custom
 import src.elements.parameters as pr
+import src.elements.variable as vr
+import src.modelling.intelligence
+import src.modelling.metrics
 
 
 class Architecture:
@@ -29,7 +28,7 @@ class Architecture:
         :return:
         """
 
-        variable = src.modelling.custom.Custom().custom
+        variable = vr.Variable()
         parameters = pr.Parameters()
 
         metrics = src.modelling.metrics.Metrics()
