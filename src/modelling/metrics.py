@@ -4,7 +4,7 @@ import logging
 import evaluate
 import numpy as np
 
-import src.modelling.parameters as pr
+import src.elements.parameters as pr
 
 
 class Metrics:
