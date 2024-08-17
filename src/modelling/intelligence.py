@@ -4,7 +4,7 @@ import logging
 import ray.train
 import transformers
 
-import src.modelling.parameters as pr
+import src.elements.parameters as pr
 import src.modelling.preprocessing
 import src.modelling.skeleton
 
