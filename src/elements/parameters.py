@@ -4,7 +4,7 @@ import collections
 import transformers
 
 
-class Parameters():
+class Parameters:
     """
     For setting terms that are particular to a pre-trained model
     architecture type; T5 specific parameters.
