@@ -3,7 +3,7 @@ import logging
 import transformers
 import torch
 
-import src.elements.variable as vr
+import src.modelling.t5.custom
 import src.modelling.t5.parameters as pr
 
 
@@ -16,18 +16,15 @@ class Preprocessing:
     architecture expectations.
     """
 
-    def __init__(self, variable: vr.Variable, parameters: pr.Parameters):
+    def __init__(self):
+        """
+        Constructor
         """
 
-        :param variable: A suite of values for machine learning
-                         model development
-        :param parameters: T5 specific parameters
-        """
-
-        self.__variable = variable
+        self.__variable = src.modelling.t5.custom.Custom().custom
 
         # The T5 specific parameters
-        self.__parameters = parameters
+        self.__parameters = pr.Parameters()
         self.__tokenizer: transformers.PreTrainedTokenizerFast = self.__parameters.tokenizer
 
         # Logging
