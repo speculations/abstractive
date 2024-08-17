@@ -5,7 +5,7 @@ import ray.tune
 import ray.tune.schedulers as rts
 
 import src.elements.variable as vr
-import src.modelling.t5.parameters as pr
+import src.modelling.parameters as pr
 
 
 class Settings:
