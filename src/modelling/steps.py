@@ -6,11 +6,11 @@ import ray.data
 
 import src.elements.parameters as pr
 import src.elements.variable as vr
+import src.functions.directories
 import src.modelling.assemble
 import src.modelling.intelligence
 import src.modelling.preprocessing
 import src.modelling.rays
-import src.functions.directories
 
 
 class Steps:
