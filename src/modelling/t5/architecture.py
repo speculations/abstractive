@@ -1,6 +1,5 @@
 """Module architecture.py"""
 import os
-import logging
 import transformers
 
 import ray.train.huggingface.transformers as rt
@@ -8,7 +7,7 @@ import ray.train.huggingface.transformers as rt
 import src.modelling.t5.metrics
 import src.modelling.t5.intelligence
 
-import src.elements.variable as vr
+import src.modelling.t5.custom
 import src.modelling.t5.parameters as pr
 
 
@@ -30,13 +29,11 @@ class Architecture:
         :return:
         """
 
-        logging.info('Architecture:\n%s', config.keys())
+        variable = src.modelling.t5.custom.Custom().custom
+        parameters = pr.Parameters()
 
-        variable: vr.Variable = config.get('variable')
-        parameters: pr.Parameters = config.get('parameters')
-
-        metrics = src.modelling.t5.metrics.Metrics(parameters=parameters)
-        intelligence = src.modelling.t5.intelligence.Intelligence(variable=variable, parameters=parameters)
+        metrics = src.modelling.t5.metrics.Metrics()
+        intelligence = src.modelling.t5.intelligence.Intelligence()
 
         args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
             output_dir=variable.MODEL_OUTPUT_DIRECTORY,
@@ -46,8 +43,8 @@ class Architecture:
             save_strategy='epoch',
             logging_strategy='epoch',
             learning_rate=variable.LEARNING_RATE,
-            weight_decay=variable.WEIGHT_DECAY,
-            per_device_train_batch_size=variable.TRAIN_BATCH_SIZE,
+            weight_decay=config.get('weight_decay'),
+            per_device_train_batch_size=config.get('per_device_train_batch_size'),
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=variable.EPOCHS,
             max_steps=variable.MAX_STEPS,
