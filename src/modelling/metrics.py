@@ -4,7 +4,7 @@ import logging
 import evaluate
 import numpy as np
 
-import src.modelling.t5.parameters as pr
+import src.modelling.parameters as pr
 
 
 class Metrics:
