@@ -9,7 +9,7 @@ import ray.tune.schedulers
 import src.modelling.t5.custom
 import src.modelling.t5.parameters as pr
 import src.modelling.t5.settings
-import src.modelling.t5.architecture
+import src.modelling.architecture
 
 
 class Assemble:
@@ -28,7 +28,7 @@ class Assemble:
         self.__parameters = pr.Parameters()
 
         # The trainer & train loop configuration
-        self.__arc = src.modelling.t5.architecture.Architecture()
+        self.__arc = src.modelling.architecture.Architecture()
         self.__train_loop_config = {'learning_rate': self.__variable.LEARNING_RATE, 'weight_decay': self.__variable.WEIGHT_DECAY,
                                     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE}
 
