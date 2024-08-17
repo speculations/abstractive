@@ -8,7 +8,7 @@ import src.modelling.metrics
 import src.modelling.intelligence
 
 import src.modelling.custom
-import src.modelling.parameters as pr
+import src.elements.parameters as pr
 
 
 class Architecture:
