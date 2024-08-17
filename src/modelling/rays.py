@@ -3,10 +3,6 @@ import logging
 
 import datasets
 import ray.data
-import transformers
-
-import src.elements.parameters as pr
-import src.elements.variable as vr
 
 
 class Rays:
@@ -14,20 +10,14 @@ class Rays:
     Ray data set.
     """
 
-    def __init__(self, source: datasets.DatasetDict, variable: vr.Variable, parameters: pr.Parameters):
+    def __init__(self, source: datasets.DatasetDict):
         """
 
-        :param source:
-        :param variable:
-        :param parameters:
+        :param source: The data in focus
         """
 
         self.__source = source
-        self.__variable = variable
 
-        # The T5 specific parameters
-        self.__parameters = parameters
-        self.__tokenizer: transformers.PreTrainedTokenizerFast = self.__parameters.tokenizer
 
         # Logging
         logging.basicConfig(level=logging.INFO,
