@@ -6,9 +6,9 @@ import ray.train.torch
 import ray.tune
 import ray.tune.schedulers
 
-import src.modelling.t5.custom
-import src.modelling.t5.parameters as pr
-import src.modelling.t5.settings
+import src.modelling.custom
+import src.modelling.parameters as pr
+import src.modelling.settings
 import src.modelling.architecture
 
 
@@ -24,7 +24,7 @@ class Assemble:
         """
 
         self.__data = data
-        self.__variable = src.modelling.t5.custom.Custom().custom
+        self.__variable = src.modelling.custom.Custom().custom
         self.__parameters = pr.Parameters()
 
         # The trainer & train loop configuration
@@ -33,7 +33,7 @@ class Assemble:
                                     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE}
 
         # Settings
-        self.__settings = src.modelling.t5.settings.Settings(variable=self.__variable, parameters=self.__parameters)
+        self.__settings = src.modelling.settings.Settings(variable=self.__variable, parameters=self.__parameters)
 
     def exc(self):
         """
