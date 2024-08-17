@@ -1,7 +1,7 @@
 """Module interface.py"""
 import datasets
 
-import src.modelling.t5.steps
+import src.modelling.steps
 
 
 class Interface:
@@ -41,4 +41,4 @@ class Interface:
         :return:
         """
 
-        src.modelling.t5.steps.Steps(source=self.__source).exc()
+        src.modelling.steps.Steps(source=self.__source).exc()
