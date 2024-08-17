@@ -13,7 +13,6 @@ class Parameters:
     checkpoint: str = 'google-t5/t5-small'
     tokenizer: transformers.PreTrainedTokenizerFast = (
         transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint))
-    n_trials: int = 4
     """
 
     def __init__(self):
@@ -24,13 +23,11 @@ class Parameters:
         checkpoint: str = 'google-t5/t5-small'
         input_prefix: str
         tokenizer: transformers.PreTrainedTokenizerFast
-        n_trials: int
         ModelArchitectureParameters = collections.namedtuple(
             typename='ModelArchitectureParameters',
-            field_names=['input_prefix', 'checkpoint', 'tokenizer', 'n_trials'])
+            field_names=['input_prefix', 'checkpoint', 'tokenizer'])
 
         self.parameters = ModelArchitectureParameters(
             input_prefix='summarize',
             checkpoint=checkpoint,
-            tokenizer=transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint),
-            n_trials=4)
+            tokenizer=transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint))
