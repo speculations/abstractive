@@ -3,7 +3,7 @@ import logging
 import transformers
 import torch
 
-import src.modelling.t5.custom
+import src.modelling.custom
 import src.modelling.parameters as pr
 
 
@@ -21,7 +21,7 @@ class Preprocessing:
         Constructor
         """
 
-        self.__variable = src.modelling.t5.custom.Custom().custom
+        self.__variable = src.modelling.custom.Custom().custom
 
         # The T5 specific parameters
         self.__parameters = pr.Parameters()
