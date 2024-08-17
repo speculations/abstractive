@@ -4,9 +4,9 @@ import logging
 import ray.train
 import transformers
 
-import src.modelling.t5.parameters as pr
-import src.modelling.t5.preprocessing
-import src.modelling.t5.skeleton
+import src.modelling.parameters as pr
+import src.modelling.preprocessing
+import src.modelling.skeleton
 
 
 class Intelligence:
@@ -22,8 +22,8 @@ class Intelligence:
         self.__parameters = pr.Parameters()
 
         # Configuration
-        self.__skeleton = src.modelling.t5.skeleton.Skeleton().exc()
-        self.__preprocessing = src.modelling.t5.preprocessing.Preprocessing()
+        self.__skeleton = src.modelling.skeleton.Skeleton().exc()
+        self.__preprocessing = src.modelling.preprocessing.Preprocessing()
 
     def iterable(self, segment: str, batch_size: int):
         """
