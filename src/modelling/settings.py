@@ -3,7 +3,6 @@ import ray
 import ray.tune
 import ray.tune.schedulers as rts
 
-
 import src.elements.variable as vr
 
 
