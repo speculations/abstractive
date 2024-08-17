@@ -13,13 +13,12 @@ class Metrics:
     transformers.Seq2SeqTrainer
     """
 
-    def __init__(self, parameters: pr.Parameters):
+    def __init__(self):
+        """
+        Constructor
         """
 
-        :param parameters: T5 specific parameters
-        """
-
-        self.__tokenizer = parameters.tokenizer
+        self.__tokenizer = pr.Parameters().tokenizer
 
         # ROUGE
         self.__rouge = evaluate.load('rouge')
