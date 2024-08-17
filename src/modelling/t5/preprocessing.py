@@ -4,7 +4,7 @@ import transformers
 import torch
 
 import src.modelling.t5.custom
-import src.modelling.t5.parameters as pr
+import src.modelling.parameters as pr
 
 
 class Preprocessing:
