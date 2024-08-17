@@ -1,15 +1,14 @@
 """Module steps.py"""
 import logging
-import os
 
 import datasets
 import ray.data
 
 
-import src.modelling.t5.assemble
-import src.modelling.t5.depositories
-import src.modelling.t5.intelligence
-import src.modelling.t5.parameters as pr
+import src.modelling.assemble
+import src.modelling.depositories
+import src.modelling.intelligence
+import src.modelling.parameters as pr
 import src.modelling.t5.preprocessing
 import src.modelling.t5.rays
 import src.modelling.t5.custom
@@ -46,14 +45,14 @@ class Steps:
         """
 
         # Re-write
-        src.modelling.t5.depositories.Depositories().exc(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
+        src.modelling.depositories.Depositories().exc(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
 
         # Temporary: Data
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.t5.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
 
         # Temporary: Modelling
-        results = src.modelling.t5.assemble.Assemble(data=rays).exc()
+        results = src.modelling.assemble.Assemble(data=rays).exc()
         self.__logger.info(results.__dir__())
 
         best = results.get_best_result()
