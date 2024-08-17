@@ -7,10 +7,10 @@ import ray.data
 import src.elements.parameters as pr
 import src.elements.variable as vr
 import src.modelling.assemble
-import src.modelling.depositories
 import src.modelling.intelligence
 import src.modelling.preprocessing
 import src.modelling.rays
+import src.functions.directories
 
 
 class Steps:
@@ -36,6 +36,16 @@ class Steps:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
+    def __directories(self):
+        """
+
+        :return:
+        """
+
+        directories = src.functions.directories.Directories()
+        directories.cleanup(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
+        directories.create(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
+
     def exc(self):
         """
         model.save_model()
@@ -43,14 +53,14 @@ class Steps:
         :return:
         """
 
-        # Re-write
-        src.modelling.depositories.Depositories().exc(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
+        # Directories
+        self.__directories()
 
-        # Temporary: Data
+        # Data
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.rays.Rays(
             source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
 
-        # Temporary: Modelling
+        # Modelling
         results = src.modelling.assemble.Assemble(data=rays).exc()
         self.__logger.info(results.__dir__())
 
