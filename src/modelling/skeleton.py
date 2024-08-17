@@ -3,7 +3,7 @@ import logging
 
 import transformers
 
-import src.modelling.t5.custom
+import src.modelling.custom
 import src.modelling.parameters as pr
 
 
@@ -17,7 +17,7 @@ class Skeleton:
         Constructor
         """
 
-        self.__variable = src.modelling.t5.custom.Custom().custom
+        self.__variable = src.modelling.custom.Custom().custom
         self.__parameters = pr.Parameters()
 
         # Logging
