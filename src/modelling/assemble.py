@@ -7,7 +7,7 @@ import ray.tune
 import ray.tune.schedulers
 
 import src.modelling.custom
-import src.modelling.parameters as pr
+import src.elements.parameters as pr
 import src.modelling.settings
 import src.modelling.architecture
 
