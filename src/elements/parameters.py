@@ -11,19 +11,22 @@ class Parameters():
 
     """
 
-    name = 'google-t5/t5-small'
+    def __init__(self):
 
-    checkpoint: str
-    input_prefix: str
-    tokenizer: transformers.PreTrainedTokenizerFast
-    n_trials: int
-    Arguments = collections.namedtuple(
-        typename='Arguments',
-        field_names=['input_prefix', 'checkpoint', 'tokenizer', 'n_trials'])
 
-    arg = Arguments(
-        input_prefix='summarize', checkpoint=name,
-        tokenizer=transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=name), n_trials=4)
+        name = 'google-t5/t5-small'
+
+        checkpoint: str
+        input_prefix: str
+        tokenizer: transformers.PreTrainedTokenizerFast
+        n_trials: int
+        Arguments = collections.namedtuple(
+            typename='Arguments',
+            field_names=['input_prefix', 'checkpoint', 'tokenizer', 'n_trials'])
+
+        self.arguments = Arguments(
+            input_prefix='summarize', checkpoint=name,
+            tokenizer=transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=name), n_trials=4)
 
 
 
