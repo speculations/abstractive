@@ -6,7 +6,6 @@ import ray.train.torch
 import ray.tune
 import ray.tune.schedulers
 
-import src.elements.parameters as pr
 import src.elements.variable as vr
 import src.modelling.architecture
 import src.modelling.settings
@@ -25,7 +24,6 @@ class Assemble:
 
         self.__data = data
         self.__variable = vr.Variable()
-        self.__parameters = pr.Parameters()
 
         # The trainer & train loop configuration
         self.__arc = src.modelling.architecture.Architecture()
@@ -33,7 +31,7 @@ class Assemble:
                                     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE}
 
         # Settings
-        self.__settings = src.modelling.settings.Settings(variable=self.__variable, parameters=self.__parameters)
+        self.__settings = src.modelling.settings.Settings()
 
     def exc(self):
         """
