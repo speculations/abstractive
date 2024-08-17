@@ -3,10 +3,10 @@ import logging
 
 import ray.train
 import transformers
+import torch
 
 import src.elements.parameters as pr
 import src.elements.variable as vr
-import src.modelling.preprocessing
 
 
 class Intelligence:
@@ -22,14 +22,29 @@ class Intelligence:
         self.__parameters = pr.Parameters()
         self.__variable = vr.Variable()
 
-        # Configuration
-        self.__preprocessing = src.modelling.preprocessing.Preprocessing()
-
         # Logging
         logging.basicConfig(level=logging.INFO,
                             format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
+
+    def __tokenization(self, blob) -> transformers.BatchEncoding:
+        """
+        blob | datasets.formatting.formatting.LazyBatch
+
+        :param blob: training or testing data batch
+        :return:
+        """
+
+        # Independent Variable
+        inputs = [self.__parameters.input_prefix + segment for segment in blob['text']]
+        structure = self.__parameters.tokenizer(text=inputs, max_length=self.__variable.MAX_LENGTH_INPUT, truncation=True)
+
+        # Targets: A dictionary structure, wherein the keys are <input_ids> & <attention_mask>
+        targets = self.__parameters.tokenizer(text_target=blob['summary'], max_length=self.__variable.MAX_LENGTH_TARGET, truncation=True)
+        structure['labels']  = torch.LongTensor(targets['input_ids'])
+
+        return structure
 
     def iterable(self, segment: str, batch_size: int):
         """
@@ -41,7 +56,7 @@ class Intelligence:
 
         part = ray.train.get_dataset_shard(segment)
         return part.iter_torch_batches(
-            batch_size=batch_size, collate_fn=self.__preprocessing.exc)
+            batch_size=batch_size, collate_fn=self.__tokenization)
 
     def collator(self) -> transformers.DataCollatorForSeq2Seq:
         """
