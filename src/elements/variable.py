@@ -1,5 +1,8 @@
 """Module variable.py"""
+import os
 import typing
+
+import config
 
 
 class Variable(typing.NamedTuple):
@@ -18,7 +21,7 @@ class Variable(typing.NamedTuple):
         The batch size for the test evaluation stage; default 16.
 
     EPOCHS: int
-        The number of epochs: default 8.
+        The number of epochs: default 2.
 
     LEARNING_RATE: float
         The learning rate; default 2e-05.
@@ -57,7 +60,7 @@ class Variable(typing.NamedTuple):
     TRAIN_BATCH_SIZE: int = 16
     VALIDATE_BATCH_SIZE: int = 16
     TEST_BATCH_SIZE: int = 16
-    EPOCHS: int = 8
+    EPOCHS: int = 2
     LEARNING_RATE: float = 0.005
     WEIGHT_DECAY: float = 0.05
     MAX_NEW_TOKENS: int = 32
@@ -66,4 +69,4 @@ class Variable(typing.NamedTuple):
     N_CPU: int = 8
     N_GPU: int = 1
     MAX_STEPS: int = -1
-    MODEL_OUTPUT_DIRECTORY: str = ''
+    MODEL_OUTPUT_DIRECTORY: str = os.path.join(config.Config().warehouse, 't5')
