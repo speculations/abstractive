@@ -1,10 +1,11 @@
 """Module preprocessing.py"""
 import logging
-import transformers
-import torch
 
-import src.modelling.custom
-import src.modelling.parameters as pr
+import torch
+import transformers
+
+import src.elements.parameters as pr
+import src.elements.variable as vr
 
 
 class Preprocessing:
@@ -21,7 +22,7 @@ class Preprocessing:
         Constructor
         """
 
-        self.__variable = src.modelling.custom.Custom().custom
+        self.__variable = vr.Variable()
 
         # The T5 specific parameters
         self.__parameters = pr.Parameters()
