@@ -3,7 +3,7 @@ import logging
 
 import transformers
 
-import src.elements.variable as vr
+import src.modelling.t5.custom
 import src.modelling.t5.parameters as pr
 
 
@@ -12,16 +12,13 @@ class Skeleton:
     Class Model
     """
 
-    def __init__(self, variable: vr.Variable, parameters: pr.Parameters):
+    def __init__(self):
+        """
+        Constructor
         """
 
-        :param variable: A suite of values for machine learning
-                         model development
-        :param parameters: T5 specific parameters
-        """
-
-        self.__variable = variable
-        self.__parameters = parameters
+        self.__variable = src.modelling.t5.custom.Custom().custom
+        self.__parameters = pr.Parameters()
 
         # Logging
         logging.basicConfig(level=logging.INFO,
