@@ -4,13 +4,9 @@ import logging
 import datasets
 import ray.data
 
-import src.elements.parameters as pr
-import src.elements.variable as vr
-import src.functions.directories
 import src.modelling.assemble
-import src.modelling.intelligence
-import src.modelling.preprocessing
 import src.modelling.rays
+import src.modelling.storage
 
 
 class Steps:
@@ -26,25 +22,12 @@ class Steps:
 
         self.__source = source
 
-        # A set of values for machine learning model development
-        self.__variable = vr.Variable()
-        self.__parameters = pr.Parameters()
-
         # Logging
         logging.basicConfig(level=logging.INFO,
                             format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __directories(self):
-        """
-
-        :return:
-        """
-
-        directories = src.functions.directories.Directories()
-        directories.cleanup(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
-        directories.create(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
 
     def exc(self):
         """
@@ -53,12 +36,11 @@ class Steps:
         :return:
         """
 
-        # Directories
-        self.__directories()
+        # Storage
+        src.modelling.storage.Storage().exc()
 
         # Data
-        rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.rays.Rays(
-            source=self.__source, variable=self.__variable, parameters=self.__parameters).exc()
+        rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.rays.Rays(source=self.__source).exc()
 
         # Modelling
         results = src.modelling.assemble.Assemble(data=rays).exc()
