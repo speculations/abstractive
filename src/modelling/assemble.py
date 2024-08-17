@@ -1,15 +1,15 @@
 """Module assemble.py"""
 import logging
-import ray.data
 
+import ray.data
 import ray.train.torch
 import ray.tune
 import ray.tune.schedulers
 
-import src.modelling.custom
 import src.elements.parameters as pr
-import src.modelling.settings
+import src.elements.variable as vr
 import src.modelling.architecture
+import src.modelling.settings
 
 
 class Assemble:
@@ -24,7 +24,7 @@ class Assemble:
         """
 
         self.__data = data
-        self.__variable = src.modelling.custom.Custom().custom
+        self.__variable = vr.Variable()
         self.__parameters = pr.Parameters()
 
         # The trainer & train loop configuration
