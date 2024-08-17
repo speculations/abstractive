@@ -5,8 +5,8 @@ import datasets
 import ray.data
 import transformers
 
+import src.elements.parameters as pr
 import src.elements.variable as vr
-import src.modelling.parameters as pr
 
 
 class Rays:
