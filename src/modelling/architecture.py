@@ -4,11 +4,11 @@ import transformers
 
 import ray.train.huggingface.transformers as rt
 
-import src.modelling.t5.metrics
-import src.modelling.t5.intelligence
+import src.modelling.metrics
+import src.modelling.intelligence
 
-import src.modelling.t5.custom
-import src.modelling.t5.parameters as pr
+import src.modelling.custom
+import src.modelling.parameters as pr
 
 
 class Architecture:
@@ -29,11 +29,11 @@ class Architecture:
         :return:
         """
 
-        variable = src.modelling.t5.custom.Custom().custom
+        variable = src.modelling.custom.Custom().custom
         parameters = pr.Parameters()
 
-        metrics = src.modelling.t5.metrics.Metrics()
-        intelligence = src.modelling.t5.intelligence.Intelligence()
+        metrics = src.modelling.metrics.Metrics()
+        intelligence = src.modelling.intelligence.Intelligence()
 
         args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
             output_dir=variable.MODEL_OUTPUT_DIRECTORY,
