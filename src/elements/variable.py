@@ -52,9 +52,6 @@ class Variable(typing.NamedTuple):
 
     MODEL_OUTPUT_DIRECTORY: str
         A directory for model outputs
-
-    DEVICE: str
-        A string denoting graphics or central processing unit, i.e., 'cuda' or 'cpu', respectively.
     """
 
     TRAIN_BATCH_SIZE: int = 16
@@ -70,4 +67,3 @@ class Variable(typing.NamedTuple):
     N_GPU: int = 1
     MAX_STEPS: int = -1
     MODEL_OUTPUT_DIRECTORY: str = ''
-    DEVICE: str = ''
