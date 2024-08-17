@@ -9,15 +9,13 @@ class Interface:
     An interface to one or more model development packages
     """
 
-    def __init__(self, source: datasets.DatasetDict, device: str):
+    def __init__(self, source: datasets.DatasetDict):
         """
 
         :param source: A datasets.DatasetDict for modelling
-        :param device:
         """
 
         self.__source = source
-        self.__device = device
 
     def exc(self):
         """
@@ -43,4 +41,4 @@ class Interface:
         :return:
         """
 
-        src.modelling.t5.steps.Steps(source=self.__source, device=self.__device).exc()
+        src.modelling.t5.steps.Steps(source=self.__source).exc()
