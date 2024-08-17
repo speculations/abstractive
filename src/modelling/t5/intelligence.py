@@ -4,7 +4,6 @@ import logging
 import ray.train
 import transformers
 
-import src.elements.variable as vr
 import src.modelling.t5.parameters as pr
 import src.modelling.t5.preprocessing
 import src.modelling.t5.skeleton
@@ -15,20 +14,16 @@ class Intelligence:
     The model development class.
     """
 
-    def __init__(self, variable: vr.Variable, parameters: pr.Parameters):
+    def __init__(self):
+        """
+        Constructor
         """
 
-        :param variable: A suite of values for machine learning
-                         model development
-        :param parameters: T5 specific parameters
-        """
-
-        self.__variable = variable
-        self.__parameters = parameters
+        self.__parameters = pr.Parameters()
 
         # Configuration
-        self.__skeleton = src.modelling.t5.skeleton.Skeleton(variable=variable, parameters=self.__parameters).exc()
-        self.__preprocessing = src.modelling.t5.preprocessing.Preprocessing(variable=self.__variable, parameters=self.__parameters)
+        self.__skeleton = src.modelling.t5.skeleton.Skeleton().exc()
+        self.__preprocessing = src.modelling.t5.preprocessing.Preprocessing()
 
     def iterable(self, segment: str, batch_size: int):
         """
