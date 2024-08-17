@@ -3,8 +3,8 @@ import logging
 
 import transformers
 
-import src.modelling.custom
-import src.modelling.parameters as pr
+import src.elements.variable as vr
+import src.elements.parameters as pr
 
 
 class Skeleton:
@@ -17,7 +17,7 @@ class Skeleton:
         Constructor
         """
 
-        self.__variable = src.modelling.custom.Custom().custom
+        self.__variable = vr.Variable()
         self.__parameters = pr.Parameters()
 
         # Logging
