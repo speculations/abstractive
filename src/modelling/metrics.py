@@ -1,10 +1,9 @@
 """Module metrics.py"""
+import collections
 import logging
 
 import evaluate
 import numpy as np
-
-import src.elements.parameters as pr
 
 
 class Metrics:
@@ -13,12 +12,14 @@ class Metrics:
     transformers.Seq2SeqTrainer
     """
 
-    def __init__(self):
-        """
-        Constructor
+    def __init__(self, parameters: collections.namedtuple(typename='ModelArchitectureParameters',
+                                                          field_names=['input_prefix', 'checkpoint', 'tokenizer'])):
         """
 
-        self.__tokenizer = pr.Parameters().tokenizer
+        :param parameters: T5 specific parameters
+        """
+
+        self.__tokenizer = parameters.tokenizer
 
         # ROUGE
         self.__rouge = evaluate.load('rouge')
