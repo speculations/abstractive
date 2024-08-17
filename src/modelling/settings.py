@@ -1,10 +1,9 @@
 """Module settings"""
-
 import ray
 import ray.tune
 import ray.tune.schedulers as rts
 
-import src.elements.parameters as pr
+
 import src.elements.variable as vr
 
 
@@ -13,18 +12,14 @@ class Settings:
     Class Settings
     """
 
-    def __init__(self, variable: vr.Variable, parameters: pr.Parameters):
+    def __init__(self):
+        """
+        Constructor
         """
 
-        :param variable: A suite of values for machine learning
-                         model development
-        :param parameters: T5 specific parameters
-        """
+        self.__variable = vr.Variable()
 
-        self.__variable = variable
-        self.__parameters = parameters
-
-    def param_space(self):
+    def initiating(self):
         """
         Initialises
 
@@ -42,7 +37,7 @@ class Settings:
         """
         https://docs.ray.io/en/latest/tune/api/doc/ray.tune.schedulers.PopulationBasedTraining.html
 
-        Leads on from param_space
+        Leads on from initiating
 
         :return:
         """
@@ -50,7 +45,7 @@ class Settings:
         return rts.PopulationBasedTraining(
             time_attr='training_iteration',
             metric='eval_loss', mode='min',
-            perturbation_interval=self.__parameters.perturbation_interval,
+            perturbation_interval=self.__variable.PERTURBATION_INTERVAL,
             hyperparam_mutations={
                 'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
                 'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
