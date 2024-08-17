@@ -6,7 +6,8 @@ import transformers
 
 class Parameters(typing.NamedTuple):
     """
-    For setting terms that are particular to a pre-trained model architecture type
+    For setting terms that are particular to a pre-trained model
+    architecture type; T5 specific parameters.
 
     Attributes
     ----------
@@ -16,9 +17,6 @@ class Parameters(typing.NamedTuple):
 
     tokenizer: transformers.PreTrainedTokenizerFast
 
-    perturbation_interval: int
-        https://docs.ray.io/en/latest/tune/api/doc/ray.tune.schedulers.PopulationBasedTraining.html
-
     n_trials: int
 
     """
@@ -27,5 +25,4 @@ class Parameters(typing.NamedTuple):
     checkpoint: str = 'google-t5/t5-small'
     tokenizer: transformers.PreTrainedTokenizerFast = (
         transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint))
-    perturbation_interval: int = 2
     n_trials: int = 4
