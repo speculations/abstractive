@@ -52,6 +52,9 @@ class Variable(typing.NamedTuple):
     N_GPU: int
         The number of graphics processing units
 
+    N_TRIALS: int
+        Hyperparameters search trials
+
     MAX_STEPS: int
         https://huggingface.co/docs/transformers/v4.44.0/en/main_classes/trainer
             #transformers.Seq2SeqTrainingArguments.max_steps
@@ -72,5 +75,6 @@ class Variable(typing.NamedTuple):
     MAX_LENGTH_TARGET: int = 32
     N_CPU: int = 8
     N_GPU: int = 1
+    N_TRIALS: int = 2
     MAX_STEPS: int = -1
     MODEL_OUTPUT_DIRECTORY: str = os.path.join(config.Config().warehouse, 't5')
