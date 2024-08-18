@@ -11,16 +11,16 @@ Exploration: Abstractive Text Summarisation
 A container/instance of a repository image will expect a string argument.  The
 argument will determine the model development activity that the instance will focus on.
 
-```yaml
+```bash
 match architecture:
-    case 't5':
-        src.modelling.t5.steps.Steps(...)
-    case 'pegasus':
-        src.modelling.pegasus.steps.Steps(...)
-    case 'bart':
-        src.modelling.bart.steps.Steps(...)
-    case _:
-        return 'Unknown architecture'
+  case 't5':
+    src.modelling.t5.steps.Steps(...)
+  case 'pegasus':
+    src.modelling.pegasus.steps.Steps(...)
+  case 'bart':
+    src.modelling.bart.steps.Steps(...)
+  case _:
+    return 'Unknown architecture'
 ```
 
 <br>
