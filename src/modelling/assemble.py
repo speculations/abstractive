@@ -80,4 +80,4 @@ class Assemble:
 
         )
 
-        tuner.fit()
+        return tuner.fit()
