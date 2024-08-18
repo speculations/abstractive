@@ -8,6 +8,9 @@ WORKDIR /app
 
 COPY /.devcontainer/requirements.txt /app
 
+# NLTK
+# installation: https://www.nltk.org/install.html
+# data: https://www.nltk.org/data.html
 RUN apt update && apt -q -y upgrade && apt -y install sudo && sudo apt -y install graphviz && \
     pip install --upgrade pip && \
 	pip install --requirement /app/requirements.txt --no-cache-dir && \
