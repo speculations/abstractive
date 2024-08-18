@@ -172,27 +172,26 @@ Note
 
 ### Address
 
-
-
-# ... steps & epochs
-max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)
-max_steps = max_steps_per_epoch * self.__n_epochs
-
+**steps & epochs**
+> max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)
+> max_steps = max_steps_per_epoch * self.__n_epochs
 
 <br>
 
 ### Warnings
 
-Warning: Environment variable NCCL_ASYNC_ERROR_HANDLING is deprecated; use TORCH_NCCL_ASYNC_ERROR_HANDLING instead (function getCvarString)
+* Warning: Environment variable NCCL_ASYNC_ERROR_HANDLING is deprecated; use TORCH_NCCL_ASYNC_ERROR_HANDLING instead (function getCvarString)
 
+* Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
 
-Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+* There were missing keys in the checkpoint model loaded: ['encoder.embed_tokens.weight', 'decoder.embed_tokens.weight', 'lm_head.weight'].
 
-
+* UserWarning: Using the model-agnostic default `max_length` (=20) to control the generation length. We recommend setting `max_new_tokens` to control the maximum length of the generation.
 
 
 <br>
 <br>
+
 
 ## References
 
@@ -208,6 +207,12 @@ Warning: find_unused_parameters=True was specified in DDP constructor, but did n
   * [train hyperparameter search](https://docs.ray.io/en/latest/tune/examples/pbt_transformers.html)
   * [Logging and Outputs in Tune](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html)
   * [Tune Experiments](https://docs.ray.io/en/latest/tune/examples/tune_analyze_results.html)
+
+
+  
+
+
+
 
 <br>
 <br>
