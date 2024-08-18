@@ -4,6 +4,7 @@ import logging
 import ray.data
 import ray.train.torch
 import ray.tune
+import ray.tune.search.basic_variant
 import ray.tune.schedulers
 
 import src.elements.variable as vr
@@ -41,8 +42,15 @@ class Assemble:
         :return:
         """
 
+        arc = src.modelling.architecture.Architecture()
+
         trainable: ray.train.torch.TorchTrainer = ray.train.torch.TorchTrainer(
-            train_loop_per_worker=src.modelling.architecture.Architecture(),
+            train_loop_per_worker=arc.exc,
+            train_loop_config={
+                'lr': ray.tune.uniform(lower=5e-3, upper=1e-1),
+                'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
+                'per_device_train_batch_size': [16, 32]
+            },
             scaling_config=ray.train.ScalingConfig(
                 num_workers=self.__variable.N_GPU,
                 use_gpu=True, trainer_resources={'CPU': self.__variable.N_CPU}),
@@ -54,17 +62,13 @@ class Assemble:
 
         tuner = ray.tune.Tuner(
             trainable=trainable,
-            param_space={
-                'lr': self.__variable.LEARNING_RATE,
-                'weight_decay': self.__variable.WEIGHT_DECAY,
-                'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
-            },
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss',
                 mode='min',
-                scheduler=self.__settings.scheduler(),
+                # scheduler=self.__settings.scheduler(),
                 num_samples=2,
-                reuse_actors=True
+                reuse_actors=True,
+                search_alg=ray.tune.search.basic_variant.BasicVariantGenerator()
             ),
             run_config=ray.train.RunConfig(
                 name='tuning',
