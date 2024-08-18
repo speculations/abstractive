@@ -4,7 +4,7 @@ import os
 import ray.train.huggingface.transformers as rt
 import transformers
 
-import src.elements.parameters as pr
+import src.modelling.parameters
 import src.elements.variable as vr
 import src.modelling.intelligence
 import src.modelling.metrics
@@ -20,7 +20,7 @@ class Architecture:
         pass
 
     @staticmethod
-    def exc(config: dict):
+    def __call__(config: dict):
         """
         https://huggingface.co/docs/transformers/main_classes/trainer#transformers.Seq2SeqTrainer
 
@@ -28,11 +28,13 @@ class Architecture:
         :return:
         """
 
-        variable = vr.Variable()
-        parameters = pr.Parameters()
+        print(config)
 
-        metrics = src.modelling.metrics.Metrics()
-        intelligence = src.modelling.intelligence.Intelligence()
+        variable = vr.Variable()
+        parameters = src.modelling.parameters.Parameters().parameters
+
+        metrics = src.modelling.metrics.Metrics(parameters=parameters)
+        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters)
 
         args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
             output_dir=variable.MODEL_OUTPUT_DIRECTORY,
@@ -41,7 +43,7 @@ class Architecture:
             eval_strategy='epoch',
             save_strategy='epoch',
             logging_strategy='epoch',
-            learning_rate=variable.LEARNING_RATE,
+            learning_rate=config.get('lr'),
             weight_decay=config.get('weight_decay'),
             per_device_train_batch_size=config.get('per_device_train_batch_size'),
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
