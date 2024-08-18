@@ -1,12 +1,11 @@
 """Module intelligence.py"""
+import collections
 import logging
 
 import ray.train
-import transformers
 import torch
-import numpy as np
+import transformers
 
-import collections
 import src.elements.variable as vr
 
 
@@ -32,7 +31,7 @@ class Intelligence:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __tokenization(self, blob):
+    def __tokenization(self, blob) -> dict[str, torch.LongTensor]:
         """
         blob | datasets.formatting.formatting.LazyBatch
 
@@ -40,23 +39,20 @@ class Intelligence:
         :return:
         """
 
-        # Input
+        # Input: A dictionary structure, wherein the keys are <input_ids> & <attention_mask>
         inputs = [self.__parameters.input_prefix + segment for segment in blob['text']]
         structure = self.__tokenizer(text=inputs, max_length=self.__variable.MAX_LENGTH_INPUT,
                                      truncation=True, padding='max_length')
-        self.__logger.info(structure.keys())
 
         # Targets: A dictionary structure, wherein the keys are <input_ids> & <attention_mask>
         targets = self.__tokenizer(text_target=blob['summary'].tolist(), max_length=self.__variable.MAX_LENGTH_TARGET,
                                    truncation=True, padding='max_length')
-        self.__logger.info(targets.keys())
 
         # Beware
         temporary = dict()
         temporary['input_ids']  = torch.LongTensor(structure['input_ids'])
         temporary['attention_mask']  = torch.LongTensor(structure['attention_mask'])
         temporary['labels']  = torch.LongTensor(targets['input_ids'])
-        self.__logger.info(temporary)
 
         return temporary
 
