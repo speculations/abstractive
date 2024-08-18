@@ -1,8 +1,10 @@
 transformers
 accelerate>=0.31
 ray[data,train,tune,serve]
+bayesian-optimization
 optuna
 optuna-dashboard
+tensorboard
 dask[complete]>=2024
 seqeval[gpu]
 datasets
