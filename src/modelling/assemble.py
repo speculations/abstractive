@@ -25,11 +25,6 @@ class Assemble:
         self.__data = data
         self.__variable = vr.Variable()
 
-        # The trainer & train loop configuration
-        self.__arc = src.modelling.architecture.Architecture()
-        self.__train_loop_config = {'learning_rate': self.__variable.LEARNING_RATE, 'weight_decay': self.__variable.WEIGHT_DECAY,
-                                    'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE}
-
         # Settings
         self.__settings = src.modelling.settings.Settings()
 
@@ -47,8 +42,7 @@ class Assemble:
         """
 
         trainable: ray.train.torch.TorchTrainer = ray.train.torch.TorchTrainer(
-            self.__arc.exc,
-            # train_loop_config=self.__train_loop_config,
+            train_loop_per_worker=src.modelling.architecture.Architecture(),
             scaling_config=ray.train.ScalingConfig(
                 num_workers=self.__variable.N_GPU,
                 use_gpu=True, trainer_resources={'CPU': self.__variable.N_CPU}),
@@ -60,8 +54,14 @@ class Assemble:
 
         tuner = ray.tune.Tuner(
             trainable=trainable,
-            param_space=self.__train_loop_config,
+            param_space={
+                'lr': self.__variable.LEARNING_RATE,
+                'weight_decay': self.__variable.WEIGHT_DECAY,
+                'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
+            },
             tune_config=ray.tune.TuneConfig(
+                metric='eval_loss',
+                mode='min',
                 scheduler=self.__settings.scheduler(),
                 num_samples=2,
                 reuse_actors=True
@@ -71,8 +71,7 @@ class Assemble:
                 checkpoint_config=ray.train.CheckpointConfig(
                     num_to_keep=5,
                     checkpoint_score_attribute='eval_loss',
-                    checkpoint_score_order='min'),
-                progress_reporter=self.__settings.reporting()
+                    checkpoint_score_order='min')
             )
 
         )
