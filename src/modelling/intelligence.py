@@ -31,7 +31,7 @@ class Intelligence:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __tokenization(self, blob) -> dict[str, torch.LongTensor]:
+    def __tokenization(self, blob):
         """
         blob | datasets.formatting.formatting.LazyBatch
 
@@ -53,6 +53,7 @@ class Intelligence:
         temporary['input_ids']  = torch.LongTensor(structure['input_ids'])
         temporary['attention_mask']  = torch.LongTensor(structure['attention_mask'])
         temporary['labels']  = torch.LongTensor(targets['input_ids'])
+        self.__logger.info(temporary)
 
         return temporary
 
