@@ -5,6 +5,7 @@ bayesian-optimization
 optuna
 optuna-dashboard
 tensorboard
+nltk
 dask[complete]>=2024
 seqeval[gpu]
 datasets
