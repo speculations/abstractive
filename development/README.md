@@ -163,6 +163,7 @@ If the ...
 
 ```shell
 tensorboard --logdir /tmp/ray/session_2024-08-18_12-20-14_323079_69424/artifacts/2024-08-18_12-20-26/tuning/driver_artifacts
+tensorboard --logdir /tmp/ray/session_2024-08-18_17-05-33_670675_9/artifacts/2024-08-18_17-05-44/tuning/driver_artifacts
 ```
 
 Note
