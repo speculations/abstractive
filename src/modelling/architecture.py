@@ -20,15 +20,12 @@ class Architecture:
         pass
 
     @staticmethod
-    def __call__(config: dict):
+    def exc():
         """
         https://huggingface.co/docs/transformers/main_classes/trainer#transformers.Seq2SeqTrainer
 
-        :param config:
         :return:
         """
-
-        print(config)
 
         variable = vr.Variable()
         parameters = src.modelling.parameters.Parameters().parameters
@@ -43,12 +40,12 @@ class Architecture:
             eval_strategy='epoch',
             save_strategy='epoch',
             logging_strategy='epoch',
-            learning_rate=config.get('lr'),
-            weight_decay=config.get('weight_decay'),
-            per_device_train_batch_size=config.get('per_device_train_batch_size'),
+            learning_rate=variable.LEARNING_RATE,
+            weight_decay=variable.WEIGHT_DECAY,
+            per_device_train_batch_size=variable.TRAIN_BATCH_SIZE,
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=variable.EPOCHS,
-            max_steps=variable.MAX_STEPS,
+            max_steps=200,
             warmup_steps=0,
             logging_dir=os.path.join(variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
             no_cuda=False,
