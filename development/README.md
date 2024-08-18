@@ -174,7 +174,7 @@ Note
 ### Address
 
 **steps & epochs**
-> max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)
+> max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)<br>
 > max_steps = max_steps_per_epoch * self.__n_epochs
 
 <br>
@@ -241,7 +241,7 @@ Hyperparameters
 
 <br>
 
-Model & System Logs
+Logging: Model & System
 
 * [Logging and Outputs in Tune](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html)
   * And, using TensorBoard
