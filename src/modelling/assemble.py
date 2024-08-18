@@ -4,8 +4,8 @@ import logging
 import ray.data
 import ray.train.torch
 import ray.tune
-import ray.tune.search.basic_variant
 import ray.tune.schedulers
+import ray.tune.search.basic_variant
 
 import src.elements.variable as vr
 import src.modelling.architecture
