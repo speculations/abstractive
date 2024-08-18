@@ -4,10 +4,10 @@ import os
 import ray.train.huggingface.transformers as rt
 import transformers
 
-import src.modelling.parameters
 import src.elements.variable as vr
 import src.modelling.intelligence
 import src.modelling.metrics
+import src.modelling.parameters
 
 
 class Architecture:
