@@ -143,6 +143,18 @@ python -m flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 -
 
 inspects complexity.
 
+<br>
+<br>
+
+## References
+
+* Ray Board
+  * [ray.init()](https://docs.ray.io/en/latest/ray-core/api/doc/ray.init.html)
+  * [Getting Started](https://docs.ray.io/en/latest/ray-observability/getting-started.html)
+* Distributed Training
+  * [Distributed Communication](https://docs.w3cub.com/pytorch/distributed.html)
+  * [PyTorch Distributed Overview](https://pytorch.org/tutorials/beginner/dist_overview.html)
+
 
 <br>
 <br>
