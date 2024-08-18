@@ -4,6 +4,7 @@ import logging
 import ray.train
 import transformers
 import torch
+import numpy as np
 
 import collections
 import src.elements.variable as vr
@@ -22,6 +23,7 @@ class Intelligence:
         """
 
         self.__parameters = parameters
+        self.__tokenizer: transformers.PreTrainedTokenizerFast = self.__parameters.tokenizer
         self.__variable = vr.Variable()
 
         # Logging
@@ -30,7 +32,7 @@ class Intelligence:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __tokenization(self, blob) -> transformers.BatchEncoding:
+    def __tokenization(self, blob):
         """
         blob | datasets.formatting.formatting.LazyBatch
 
@@ -38,15 +40,25 @@ class Intelligence:
         :return:
         """
 
-        # Independent Variable
+        # Input
         inputs = [self.__parameters.input_prefix + segment for segment in blob['text']]
-        structure = self.__parameters.tokenizer(text=inputs, max_length=self.__variable.MAX_LENGTH_INPUT, truncation=True)
+        structure = self.__tokenizer(text=inputs, max_length=self.__variable.MAX_LENGTH_INPUT,
+                                     truncation=True, padding='max_length')
+        self.__logger.info(structure.keys())
 
         # Targets: A dictionary structure, wherein the keys are <input_ids> & <attention_mask>
-        targets = self.__parameters.tokenizer(text_target=blob['summary'], max_length=self.__variable.MAX_LENGTH_TARGET, truncation=True)
-        structure['labels']  = torch.LongTensor(targets['input_ids'])
+        targets = self.__tokenizer(text_target=blob['summary'].tolist(), max_length=self.__variable.MAX_LENGTH_TARGET,
+                                   truncation=True, padding='max_length')
+        self.__logger.info(targets.keys())
 
-        return structure
+        # Beware
+        temporary = dict()
+        temporary['input_ids']  = torch.LongTensor(structure['input_ids'])
+        temporary['attention_mask']  = torch.LongTensor(structure['attention_mask'])
+        temporary['labels']  = torch.LongTensor(targets['input_ids'])
+        self.__logger.info(temporary)
+
+        return temporary
 
     def iterable(self, segment: str, batch_size: int):
         """
