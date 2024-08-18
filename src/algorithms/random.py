@@ -19,7 +19,7 @@ class Random:
         """
 
         # Constructing a random generator
-        seed = config.Config().seed()
+        seed = config.Config().seed
         self.__rng = np.random.default_rng(seed=seed)
 
         # The random number boundaries

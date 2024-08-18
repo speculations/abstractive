@@ -14,7 +14,7 @@ jobs:
       max-parallel: 4
       fail-fast: false
       matrix:
-        python-version: [3.12]
+        python-version: ['3.10']
 
     steps:
       - uses: actions/checkout@v4
@@ -41,8 +41,11 @@ jobs:
           echo "Issues in relation to logic (F7), syntax (Python E9, Flake F7), mathematical
           formulae symbols (F63), undefined variable names (F82):"
           
-          printf "\n src/algorithms "
-          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/algorithms
+          printf "\n src/data "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/data
+          
+          printf "\n src/elements "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/elements
           
           printf "\n src/functions "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/functions
@@ -52,8 +55,11 @@ jobs:
           printf "\n\n"
           echo "Complexity issues:"
           
-          printf "\n src/algorithms "
-          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/algorithms
+          printf "\n src/data "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/data
+          
+          printf "\n src/elements "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/elements
           
           printf "\n src/functions "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/functions
@@ -62,9 +68,12 @@ jobs:
         run: |
           printf "\n"
           echo "============================= pylint session starts =============================="
-
-          printf "\n Package src/algorithms"
-          pylint --rcfile .pylintrc src/algorithms
+          
+          printf "\n Package src/data"
+          pylint --rcfile .pylintrc src/data
+          
+          printf "\n Package src/elements"
+          pylint --rcfile .pylintrc src/elements
           
           printf "\n Package src/functions"
           pylint --rcfile .pylintrc src/functions
@@ -74,8 +83,8 @@ jobs:
           printf "\n"
           echo "============================= pytest session starts =============================="
           
-          printf "\n pytest tests/algorithms/test_random.py"
-          pytest -o python_files=test_random.py
+          printf "\n pytest tests/algorithms/"
+          pytest -o python_files=test_*
 
       - name: Coverage with pytest-cov
         run: |
@@ -88,6 +97,7 @@ jobs:
   packages:
     name: GitHub Packages Container Registry
     needs: build
+    if: ${{ false }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -127,7 +137,7 @@ jobs:
   ecr:
     name: Amazon Elastic Container Registry
     needs: build
-    if: ${{ false }}
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
     permissions:
@@ -155,7 +165,7 @@ jobs:
         shell: bash
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: 'patterns'
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.event.repository.name }}
         run: |
           docker build . --file Dockerfile --tag "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
