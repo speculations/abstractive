@@ -7,7 +7,10 @@ import config
 
 class Variable(typing.NamedTuple):
     """
-    A suite of values for machine learning model development
+    A suite of values for machine learning model development.  An option
+
+        * DEVICE='cuda' if torch.cuda.is_available() else 'cpu'
+
 
     Attributes
     ----------
