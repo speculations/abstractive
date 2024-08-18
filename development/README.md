@@ -146,6 +146,54 @@ inspects complexity.
 <br>
 <br>
 
+## Notes
+
+### Tune
+
+> [!NOTE]
+> [Tuners](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html) can also be used to launch hyperparameter tuning without using Ray Train, e.g., [ray.train.torch.TorchTrainer](https://docs.ray.io/en/latest/train/api/doc/ray.train.torch.TorchTrainer.html)
+
+For the ray board
+
+```bash
+127.0.0.1:8265
+```
+
+If the ...
+
+```shell
+tensorboard --logdir /tmp/ray/session_2024-08-18_12-20-14_323079_69424/artifacts/2024-08-18_12-20-26/tuning/driver_artifacts
+```
+
+Note
+* RunConfig(storage_path='', ...) for [specifying the parent directory](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html) of the trials data
+
+<br>
+
+### Address
+
+
+
+# ... steps & epochs
+max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)
+max_steps = max_steps_per_epoch * self.__n_epochs
+
+
+<br>
+
+### Warnings
+
+Warning: Environment variable NCCL_ASYNC_ERROR_HANDLING is deprecated; use TORCH_NCCL_ASYNC_ERROR_HANDLING instead (function getCvarString)
+
+
+Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+
+
+
+
+<br>
+<br>
+
 ## References
 
 * Ray Board
@@ -154,7 +202,12 @@ inspects complexity.
 * Distributed Training
   * [Distributed Communication](https://docs.w3cub.com/pytorch/distributed.html)
   * [PyTorch Distributed Overview](https://pytorch.org/tutorials/beginner/dist_overview.html)
-
+* Modelling
+  * [Hyperparameter Tuning with Ray Tune](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html)
+  * [Getting Started with Ray Tune](https://docs.ray.io/en/latest/tune/getting-started.html)
+  * [train hyperparameter search](https://docs.ray.io/en/latest/tune/examples/pbt_transformers.html)
+  * [Logging and Outputs in Tune](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html)
+  * [Tune Experiments](https://docs.ray.io/en/latest/tune/examples/tune_analyze_results.html)
 
 <br>
 <br>
