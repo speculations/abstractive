@@ -1,6 +1,6 @@
 <br>
 
-Exploration: Abstractive Text Summarisation
+In Progress: Abstractive Text Summarisation
 
 <br>
 
