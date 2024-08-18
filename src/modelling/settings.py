@@ -26,10 +26,9 @@ class Settings:
         """
 
         return {
-            'learning_rate': self.__variable.LEARNING_RATE,
+            'lr': self.__variable.LEARNING_RATE,
             'weight_decay': self.__variable.WEIGHT_DECAY,
-            'per_device_train_batch_size': 2*self.__variable.TRAIN_BATCH_SIZE,
-            'num_train_epochs': ray.tune.choice([2, 3])
+            'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
         }
 
     def scheduler(self):
@@ -43,10 +42,9 @@ class Settings:
 
         return rts.PopulationBasedTraining(
             time_attr='training_iteration',
-            metric='eval_loss', mode='min',
             perturbation_interval=self.__variable.PERTURBATION_INTERVAL,
             hyperparam_mutations={
-                'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
+                'lr': ray.tune.uniform(lower=5e-3, upper=1e-1),
                 'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
                 'per_device_train_batch_size': [16, 32]
             },
