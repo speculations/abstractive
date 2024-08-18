@@ -62,6 +62,11 @@ class Assemble:
 
         tuner = ray.tune.Tuner(
             trainable=trainable,
+            # param_space={
+            #     'lr': self.__variable.LEARNING_RATE,
+            #     'weight_decay': self.__variable.WEIGHT_DECAY,
+            #     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
+            # },
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss',
                 mode='min',
