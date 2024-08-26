@@ -8,10 +8,8 @@ import ray.tune.search.bayesopt
 
 import src.elements.variable as vr
 import src.modelling.architecture
-import src.modelling.settings
-
-import src.modelling.parameters
 import src.modelling.numerics
+import src.modelling.settings
 
 
 class Reduced:
@@ -54,8 +52,10 @@ class Reduced:
                     num_workers=self.__variable.N_GPU, use_gpu=True,
                     trainer_resources={'CPU': self.__variable.N_CPU}),
                 "datasets": {'train': self.__data['train'], 'eval': self.__data['validate']},
-                "train_loop_config": {'learning_rate': self.__variable.LEARNING_RATE, 'weight_decay': self.__variable.WEIGHT_DECAY,
-                                      'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE, 'max_steps': self.__numerics()}
+                "train_loop_config": {'learning_rate': self.__variable.LEARNING_RATE,
+                                      'weight_decay': self.__variable.WEIGHT_DECAY,
+                                      'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE,
+                                      'max_steps': self.__numerics()}
             },
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss', mode='min',
