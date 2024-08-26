@@ -38,14 +38,20 @@ class Reduced:
         self.__settings = src.modelling.settings.Settings()
 
     def __trainer(self):
+        """
+
+        :return:
+        """
 
         arc = src.modelling.architecture.Architecture(max_steps=self.__numerics())
+
+        # Directives
         metrics = src.modelling.metrics.Metrics(parameters=self.__parameters)
         intelligence = src.modelling.intelligence.Intelligence(parameters=self.__parameters)
 
+        # Trainer
         trainer = transformers.Seq2SeqTrainer(
-            model_init=intelligence.model,
-            args=arc.args,
+            model_init=intelligence.model, args=arc.args,
             train_dataset=intelligence.iterable(segment='train', batch_size=self.__variable.TRAIN_BATCH_SIZE),
             eval_dataset=intelligence.iterable(segment='eval', batch_size=self.__variable.VALIDATE_BATCH_SIZE),
             tokenizer=self.__parameters.tokenizer,
