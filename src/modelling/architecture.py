@@ -67,6 +67,4 @@ class Architecture:
             data_collator=intelligence.collator(),
             compute_metrics=metrics.exc
         )
-        trainer.add_callback(rt.RayTrainReportCallback())
-        trainer = rt.prepare_trainer(trainer)
-        trainer.train()
+
