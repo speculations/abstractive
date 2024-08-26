@@ -26,7 +26,7 @@ class Reduced:
         self.__data = data
         self.__variable = vr.Variable()
 
-
+        # Evaluate maximum steps
         self.__numerics = src.modelling.numerics.Numerics(data=data, variable=self.__variable)
         logging.info('max_steps: %s', self.__numerics())
 
@@ -43,6 +43,7 @@ class Reduced:
 
         arc = src.modelling.architecture.Architecture()
 
+        # From Hugging Face Trainer -> Ray Trainer
         trainable = ray.train.torch.TorchTrainer(train_loop_per_worker=arc.exc)
 
         tuner = ray.tune.Tuner(
