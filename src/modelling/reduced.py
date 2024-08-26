@@ -70,7 +70,6 @@ class Reduced:
                     checkpoint_score_attribute='eval_loss',
                     checkpoint_score_order='min')
             )
-
         )
 
         return tuner.fit()
