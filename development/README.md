@@ -52,6 +52,15 @@ Herein, `-p 10000:8888` maps the host port `10000` to container port `8888`.  No
 
 <br>
 
+An option
+
+```shell
+docker run --rm --gpus all --shm-size=16gb -i -t -p 8050:8050 -p 6006:6006 -p 8265:8265 -w /app --mount type=bind,src="$(pwd)",target=/app text
+```
+
+
+<br>
+
 Get the name of the running instance of ``text`` via:
 
 ```shell
@@ -257,6 +266,30 @@ Distributed Training
 * [Distributed Communication](https://docs.w3cub.com/pytorch/distributed.html)
 * [PyTorch Distributed Overview](https://pytorch.org/tutorials/beginner/dist_overview.html)
 * [Get Started with Distributed Training using Hugging Face Transformers](https://docs.ray.io/en/latest/train/getting-started-transformers.html)
+
+
+<br>
+
+File Formats (Note $\rightarrow$ GPT: Generative Pre-trained Transformer)
+
+* GGUF: GPT-Generated Unified Format
+* GGML: GPT-Generated Model Language
+* [What is GGUF and GGML?](https://medium.com/@phillipgimmi/what-is-gguf-and-ggml-e364834d241c)
+* [About GGUF](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md)
+* [to GGUF](https://medium.com/@qdrddr/the-easiest-way-to-convert-a-model-to-gguf-and-quantize-91016e97c987)
+* [to GGUF discussion](https://github.com/ggerganov/llama.cpp/discussions/2948)
+* [Hugging Face & GGUF](https://huggingface.co/docs/hub/gguf)
+
+Interface
+* [Open WebUI Getting Started](https://docs.openwebui.com/getting-started/)
+  * [cf.](https://medium.com/@edu.ukulelekim/how-to-locally-deploy-ollama-and-open-webui-with-docker-compose-318f0582e01f)
+  * https://github.com/open-webui/open-webui
+* [Ollama](https://ollama.com)
+  * https://hub.docker.com/r/ollama/ollama
+  * https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image
+  * [About OLLAMA(Omni-Layer Learning Language Acquisition Model)](www.geeksforgeeks.org/ollama-explained-transforming-ai-accessibility-and-language-processing/)
+* [Open WebUI + OLLAMA](https://docs.openwebui.com/#installing-open-webui-with-bundled-ollama-support)
+
 
 <br>
 <br>
