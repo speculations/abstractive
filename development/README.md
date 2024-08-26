@@ -287,7 +287,7 @@ Interface
 * [Ollama](https://ollama.com)
   * https://hub.docker.com/r/ollama/ollama
   * https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image
-  * [About OLLAMA(Omni-Layer Learning Language Acquisition Model)](www.geeksforgeeks.org/ollama-explained-transforming-ai-accessibility-and-language-processing/)
+  * [About OLLAMA(Omni-Layer Learning Language Acquisition Model)](https://www.geeksforgeeks.org/ollama-explained-transforming-ai-accessibility-and-language-processing/)
 * [Open WebUI + OLLAMA](https://docs.openwebui.com/#installing-open-webui-with-bundled-ollama-support)
 
 
