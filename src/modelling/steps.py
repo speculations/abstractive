@@ -3,8 +3,9 @@ import logging
 
 import datasets
 import ray.data
+import ray.tune
 
-import src.modelling.assemble
+import src.modelling.reduced
 import src.modelling.rays
 import src.modelling.storage
 
@@ -42,7 +43,7 @@ class Steps:
         rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.rays.Rays(source=self.__source).exc()
 
         # Modelling
-        results = src.modelling.assemble.Assemble(data=rays).exc()
+        results: ray.tune.ResultGrid = src.modelling.reduced.Reduced(data=rays).exc()
         self.__logger.info(results.__dir__())
 
         best = results.get_best_result()
