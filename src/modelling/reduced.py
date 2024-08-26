@@ -80,7 +80,12 @@ class Reduced:
             #     'weight_decay': self.__variable.WEIGHT_DECAY,
             #     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
             # },
-            
+            param_space={
+                "scaling_config": ray.train.ScalingConfig(
+                    num_workers=self.__variable.N_GPU, use_gpu=True,
+                    trainer_resources={'CPU': self.__variable.N_CPU}),
+                "datasets": {'train': self.__data['train'], 'eval': self.__data['validate']}
+            },
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss', mode='min',
                 scheduler=self.__settings.scheduler(),
