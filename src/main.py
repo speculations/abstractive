@@ -35,6 +35,7 @@ def main() -> None:
     src.functions.cache.Cache().exc()
 
 
+# noinspection DuplicatedCode
 if __name__ == '__main__':
 
     # Paths
