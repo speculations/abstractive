@@ -1,13 +1,10 @@
 """Module architecture.py"""
 import os
 
-import ray.train.huggingface.transformers as rt
 import transformers
 
 import src.elements.variable as vr
-import src.modelling.intelligence
-import src.modelling.metrics
-import src.modelling.parameters
+
 
 
 class Architecture:
@@ -16,24 +13,14 @@ class Architecture:
     Hyperparameters, etc.: learning rate, weight decay, the batch sizes, number of training epochs
     """
 
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def exc():
+    def __init__(self, max_steps: int):
         """
-        https://huggingface.co/docs/transformers/main_classes/trainer#transformers.Seq2SeqTrainer
-
-        :return:
+        Constructor
         """
 
         variable = vr.Variable()
-        parameters = src.modelling.parameters.Parameters().parameters
 
-        metrics = src.modelling.metrics.Metrics(parameters=parameters)
-        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters)
-
-        args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
+        self.args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
             output_dir=variable.MODEL_OUTPUT_DIRECTORY,
             do_train=True,
             do_eval=True,
@@ -45,7 +32,7 @@ class Architecture:
             per_device_train_batch_size=variable.TRAIN_BATCH_SIZE,
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=variable.EPOCHS,
-            max_steps=125,
+            max_steps=max_steps,
             warmup_steps=0,
             logging_dir=os.path.join(variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
             no_cuda=False,
@@ -57,16 +44,3 @@ class Architecture:
             fp16=True,
             push_to_hub=False
         )
-
-        trainer = transformers.Seq2SeqTrainer(
-            model_init=intelligence.model,
-            args=args,
-            train_dataset=intelligence.iterable(segment='train', batch_size=variable.TRAIN_BATCH_SIZE),
-            eval_dataset=intelligence.iterable(segment='eval', batch_size=variable.VALIDATE_BATCH_SIZE),
-            tokenizer=parameters.tokenizer,
-            data_collator=intelligence.collator(),
-            compute_metrics=metrics.exc
-        )
-        trainer.add_callback(rt.RayTrainReportCallback())
-        trainer = rt.prepare_trainer(trainer)
-        trainer.train()
