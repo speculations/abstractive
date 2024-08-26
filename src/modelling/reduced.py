@@ -80,12 +80,11 @@ class Reduced:
             #     'weight_decay': self.__variable.WEIGHT_DECAY,
             #     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
             # },
+            
             tune_config=ray.tune.TuneConfig(
-                metric='eval_loss',
-                mode='min',
-                # scheduler=self.__settings.scheduler(),
-                num_samples=2,
-                reuse_actors=True,
+                metric='eval_loss', mode='min',
+                scheduler=self.__settings.scheduler(),
+                num_samples=1, reuse_actors=True,
                 search_alg=ray.tune.search.bayesopt.BayesOptSearch()
             ),
             run_config=ray.train.RunConfig(
