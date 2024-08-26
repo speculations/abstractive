@@ -5,14 +5,11 @@ import ray.data
 import ray.train.torch
 import ray.tune
 import ray.tune.search.bayesopt
-import transformers
-import ray.train.huggingface.transformers as rt
 
 import src.elements.variable as vr
 import src.modelling.architecture
 import src.modelling.settings
-import src.modelling.intelligence
-import src.modelling.metrics
+
 import src.modelling.parameters
 import src.modelling.numerics
 
@@ -30,7 +27,7 @@ class Reduced:
 
         self.__data = data
         self.__variable = vr.Variable()
-        self.__parameters = src.modelling.parameters.Parameters().parameters
+
 
         self.__numerics = src.modelling.numerics.Numerics(data=data, variable=self.__variable)
         logging.info('max_steps: %s', self.__numerics())
@@ -38,31 +35,6 @@ class Reduced:
         # Settings
         self.__settings = src.modelling.settings.Settings()
 
-    def __trainer(self):
-        """
-
-        :return:
-        """
-
-        arc = src.modelling.architecture.Architecture(max_steps=self.__numerics())
-
-        # Directives
-        metrics = src.modelling.metrics.Metrics(parameters=self.__parameters)
-        intelligence = src.modelling.intelligence.Intelligence(parameters=self.__parameters)
-
-        # Trainer
-        trainer = transformers.Seq2SeqTrainer(
-            model_init=intelligence.model, args=arc.args,
-            train_dataset=intelligence.iterable(segment='train', batch_size=self.__variable.TRAIN_BATCH_SIZE),
-            eval_dataset=intelligence.iterable(segment='eval', batch_size=self.__variable.VALIDATE_BATCH_SIZE),
-            tokenizer=self.__parameters.tokenizer,
-            data_collator=intelligence.collator(),
-            compute_metrics=metrics.exc
-        )
-        trainer.add_callback(rt.RayTrainReportCallback())
-        trainer = rt.prepare_trainer(trainer)
-
-        return trainer.train()
 
     def exc(self):
         """
@@ -71,20 +43,19 @@ class Reduced:
         :return:
         """
 
-        trainable = ray.train.torch.TorchTrainer(train_loop_per_worker=self.__trainer)
+        arc = src.modelling.architecture.Architecture()
+
+        trainable = ray.train.torch.TorchTrainer(train_loop_per_worker=arc.exc)
 
         tuner = ray.tune.Tuner(
             trainable,
-            # param_space={
-            #     'lr': self.__variable.LEARNING_RATE,
-            #     'weight_decay': self.__variable.WEIGHT_DECAY,
-            #     'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE
-            # },
             param_space={
                 "scaling_config": ray.train.ScalingConfig(
                     num_workers=self.__variable.N_GPU, use_gpu=True,
                     trainer_resources={'CPU': self.__variable.N_CPU}),
-                "datasets": {'train': self.__data['train'], 'eval': self.__data['validate']}
+                "datasets": {'train': self.__data['train'], 'eval': self.__data['validate']},
+                "train_loop_config": {'learning_rate': self.__variable.LEARNING_RATE, 'weight_decay': self.__variable.WEIGHT_DECAY,
+                                      'per_device_train_batch_size': self.__variable.TRAIN_BATCH_SIZE, 'max_steps': self.__numerics()}
             },
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss', mode='min',
