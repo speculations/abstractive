@@ -33,6 +33,7 @@ class Reduced:
         self.__parameters = src.modelling.parameters.Parameters().parameters
 
         self.__numerics = src.modelling.numerics.Numerics(data=data, variable=self.__variable)
+        logging.info('max_steps: %s', self.__numerics())
 
         # Settings
         self.__settings = src.modelling.settings.Settings()
