@@ -1,13 +1,17 @@
 """Module architecture.py"""
 import os
 
-import transformers
+import datasets
 import ray.train.huggingface.transformers as rt
+import transformers
 
+import src.data.interface
 import src.elements.variable as vr
 import src.modelling.intelligence
 import src.modelling.metrics
+import src.modelling.numerics
 import src.modelling.parameters
+import src.modelling.preprocessing
 
 
 class Architecture:
@@ -23,10 +27,30 @@ class Architecture:
 
     @staticmethod
     def exc(config: dict):
+        """
+        Important, this must be a static method.
+
+        :param config:
+        :return:
+        """
 
         variable = vr.Variable()
         parameters = src.modelling.parameters.Parameters().parameters
 
+        # Directives
+        metrics = src.modelling.metrics.Metrics(parameters=parameters)
+        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters)
+
+        # Data & Tokenization: Each split is converted into a T5 tokenized split.
+        source: datasets.DatasetDict = src.data.interface.Interface().get_dataset()
+        preprocessing = src.modelling.preprocessing.Preprocessing(parameters=parameters)
+        data: datasets.DatasetDict = source.map(preprocessing.batches, batched=True)
+
+        # For maximum steps
+        numerics = src.modelling.numerics.Numerics(
+            n_training_instances=data['train'].shape[0], variable=variable)
+
+        # Arguments
         args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
             output_dir=variable.MODEL_OUTPUT_DIRECTORY,
             do_train=True,
@@ -39,7 +63,7 @@ class Architecture:
             per_device_train_batch_size=config['per_device_train_batch_size'],
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=variable.EPOCHS,
-            max_steps=config['max_steps'],
+            max_steps=numerics(),
             warmup_steps=0,
             logging_dir=os.path.join(variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
             no_cuda=False,
@@ -52,15 +76,11 @@ class Architecture:
             push_to_hub=False
         )
 
-        # Directives
-        metrics = src.modelling.metrics.Metrics(parameters=parameters)
-        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters)
-
         # Trainer
         trainer = transformers.Seq2SeqTrainer(
             model_init=intelligence.model, args=args,
-            train_dataset=intelligence.iterable(segment='train', batch_size=variable.TRAIN_BATCH_SIZE),
-            eval_dataset=intelligence.iterable(segment='eval', batch_size=variable.VALIDATE_BATCH_SIZE),
+            train_dataset=data['train'],
+            eval_dataset=data['validate'],
             tokenizer=parameters.tokenizer,
             data_collator=intelligence.collator(),
             compute_metrics=metrics.exc
