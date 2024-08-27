@@ -11,14 +11,14 @@ class Numerics:
     Calculates max_steps for TrainerArguments ...
     """
 
-    def __init__(self, data: dict[str, ray.data.dataset.MaterializedDataset], variable: vr.Variable):
+    def __init__(self, n_training_instances: int, variable: vr.Variable):
         """
 
-        :param data:
+        :param n_instances:
         :param variable:
         """
 
-        self.__data = data
+        self.__n_training_instances = n_training_instances
         self.__variable = variable
 
 
@@ -28,7 +28,7 @@ class Numerics:
         :return:
         """
 
-        max_steps_per_epoch: int = self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
+        max_steps_per_epoch: int = self.__n_training_instances // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
         max_steps: int = max_steps_per_epoch * self.__variable.EPOCHS
 
         return max_steps
