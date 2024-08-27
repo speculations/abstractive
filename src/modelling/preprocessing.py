@@ -5,6 +5,7 @@ import datasets.formatting.formatting
 import transformers
 import torch
 import ray
+import ray.data
 
 import src.elements.variable as vr
 
@@ -81,14 +82,13 @@ class Preprocessing:
 
         return structure
 
-    def iterables(self, segment: str, batch_size: int):
+    def iterables(self, part: ray.data.DataIterator, batch_size: int):
         """
 
-        :param segment:
+        :param part:
         :param batch_size:
         :return:
         """
 
-        part = ray.train.get_dataset_shard(segment)
         return part.iter_torch_batches(
             batch_size=batch_size, collate_fn=self.__tokenization)
