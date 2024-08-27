@@ -1,12 +1,9 @@
 """Module steps.py"""
 import logging
 
-import datasets
-import ray.data
 import ray.tune
 
 import src.modelling.reduced
-import src.modelling.rays
 import src.modelling.storage
 
 
@@ -15,13 +12,10 @@ class Steps:
     Class Steps
     """
 
-    def __init__(self, source: datasets.DatasetDict):
+    def __init__(self):
         """
-
-        :param source: A dictionary of data splits; training, validation, etc., splits.
+        Constructor
         """
-
-        self.__source = source
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -39,11 +33,8 @@ class Steps:
         # Storage
         src.modelling.storage.Storage().exc()
 
-        # Data
-        rays: dict[str, ray.data.dataset.MaterializedDataset] = src.modelling.rays.Rays(source=self.__source).exc()
-
         # Modelling
-        results: ray.tune.ResultGrid = src.modelling.reduced.Reduced(data=rays).exc()
+        results: ray.tune.ResultGrid = src.modelling.reduced.Reduced().exc()
         self.__logger.info(results.__dir__())
 
         best = results.get_best_result()
