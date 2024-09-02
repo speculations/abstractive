@@ -27,4 +27,3 @@ class Parameters:
 
         return transformers.AutoTokenizer.from_pretrained(
                 pretrained_model_name_or_path=self.__arguments.checkpoint)
-
