@@ -1,4 +1,4 @@
-
+"""Module interface.py"""
 import datasets
 import ray.data
 
@@ -7,6 +7,10 @@ import src.data.rays
 
 
 class Interface:
+    """
+    The interface to the modelling data.  It provides either a (a) datasets.DatasetDict,
+    or (b) dict[str, ray.data.dataset.MaterializedDataset]
+    """
 
     def __init__(self):
         """
