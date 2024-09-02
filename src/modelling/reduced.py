@@ -68,6 +68,9 @@ class Reduced:
             ),
             run_config=ray.train.RunConfig(
                 name='tuning',
+                progress_reporter=ray.tune.CLIReporter(
+                    parameter_columns=['learning_rate', 'weight_decay', 'per_device_training_batch_size', 'num_train_epochs'],
+                    metric_columns=['eval_loss', 'rouge1', 'rouge2', 'rougeLsum', 'median']),
                 checkpoint_config=ray.train.CheckpointConfig(
                     num_to_keep=1,
                     checkpoint_score_attribute='eval_loss',
