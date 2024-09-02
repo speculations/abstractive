@@ -2,8 +2,6 @@
 import collections
 import logging
 
-import ray.train
-import torch
 import transformers
 
 import src.elements.variable as vr
