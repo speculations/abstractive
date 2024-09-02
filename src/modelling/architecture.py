@@ -10,7 +10,6 @@ import src.data.interface
 import src.elements.variable as vr
 import src.modelling.intelligence
 import src.modelling.metrics
-import src.modelling.numerics
 import src.modelling.parameters
 import src.modelling.preprocessing
 
@@ -58,7 +57,7 @@ class Architecture:
             save_strategy='epoch',
             logging_strategy='epoch',
             learning_rate=config.get('learning_rate', 5e-3),
-            weight_decay=variable.WEIGHT_DECAY,
+            weight_decay=config.get('weight_decay', 0.0),
             per_device_train_batch_size=variable.TRAIN_BATCH_SIZE,
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=variable.EPOCHS,
