@@ -18,16 +18,22 @@ class Parameters:
     def __init__(self):
         """
         Constructor
-        """
 
-        checkpoint: str = 'google-t5/t5-small'
         input_prefix: str
         tokenizer: transformers.PreTrainedTokenizerFast
+        """
+
+        self.__checkpoint: str = 'google-t5/t5-small'
+
+    def __call__(self):
+
         ModelArchitectureParameters = collections.namedtuple(
             typename='ModelArchitectureParameters',
             field_names=['input_prefix', 'checkpoint', 'tokenizer'])
 
-        self.parameters = ModelArchitectureParameters(
+        return ModelArchitectureParameters(
             input_prefix='summarize',
-            checkpoint=checkpoint,
-            tokenizer=transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint))
+            checkpoint=self.__checkpoint,
+            tokenizer=transformers.AutoTokenizer.from_pretrained(
+                pretrained_model_name_or_path=self.__checkpoint)
+        )
