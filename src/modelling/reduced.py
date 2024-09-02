@@ -29,6 +29,9 @@ class Reduced:
         # Settings
         self.__settings = src.modelling.settings.Settings()
 
+        # Data -> data: dict[str, MaterializedDataset]
+        self.__data = src.data.interface.Interface().get_rays()
+        self.__max_steps_per_epoch: int = self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
 
     def exc(self):
         """
@@ -43,18 +46,11 @@ class Reduced:
 
         arc = src.modelling.architecture.Architecture()
 
-        # Data -> data: dict[str, MaterializedDataset]
-        data = src.data.interface.Interface().get_rays()
-
-        # Maximum steps
-        numerics = src.modelling.numerics.Numerics(
-            n_training_instances=data['train'].count(), variable=self.__variable)
-        logging.info('maximum steps: %s', numerics())
 
         # From Hugging Face Trainer -> Ray Trainer
         trainable = ray.train.torch.TorchTrainer(
             arc.exc,
-            datasets={"train": data["train"], "eval": data["validate"]})
+            datasets={"train": self.__data["train"], "eval": self.__data["validate"]})
 
         # Tuner
         tuner = ray.tune.Tuner(
@@ -64,7 +60,7 @@ class Reduced:
                     'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
                     'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
                     'per_device_train_batch_size': ray.tune.grid_search([16, 32]),
-                    'max_steps': numerics()},
+                    'max_steps_per_epoch': self.__max_steps_per_epoch},
                 "scaling_config": ray.train.ScalingConfig(
                     num_workers=self.__variable.N_GPU,
                     use_gpu=True,
