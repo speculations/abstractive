@@ -75,10 +75,9 @@ class Preprocessing:
                                    truncation=True, padding='max_length')
 
         # Beware
-        structure = dict()
-        structure['input_ids']  = torch.LongTensor(inputs['input_ids'])
-        structure['attention_mask']  = torch.LongTensor(inputs['attention_mask'])
-        structure['labels']  = torch.LongTensor(targets['input_ids'])
+        structure = {'input_ids': torch.LongTensor(inputs['input_ids']),
+                     'attention_mask': torch.LongTensor(inputs['attention_mask']),
+                     'labels': torch.LongTensor(targets['input_ids'])}
         self.__logger.info(structure)
 
         return structure
