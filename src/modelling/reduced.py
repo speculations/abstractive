@@ -1,5 +1,4 @@
 """Module assemble.py"""
-import logging
 
 import ray.data
 import ray.train.torch
@@ -25,7 +24,8 @@ class Reduced:
 
         # Data -> data: dict[str, MaterializedDataset]
         self.__data: dict[str, ray.data.dataset.MaterializedDataset] = src.data.interface.Interface().get_rays()
-        self.__max_steps_per_epoch: int = self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
+        self.__max_steps_per_epoch: int = (
+                self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU))
 
     def exc(self):
         """
