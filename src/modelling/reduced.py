@@ -54,19 +54,20 @@ class Reduced:
         # From Hugging Face Trainer -> Ray Trainer
         trainable = ray.train.torch.TorchTrainer(
             arc.exc,
-            train_loop_config={
-                'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
-                'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
-                'per_device_train_batch_size': ray.tune.grid_search([16, 32]),
-                'max_steps': numerics()},
             datasets={"train": data["train"], "eval": data["validate"]})
 
         # Tuner
         tuner = ray.tune.Tuner(
             trainable,
             param_space={
+                "train_loop_config": {
+                    'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
+                    'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
+                    'per_device_train_batch_size': ray.tune.grid_search([16, 32]),
+                    'max_steps': numerics()},
                 "scaling_config": ray.train.ScalingConfig(
-                    num_workers=self.__variable.N_GPU, use_gpu=True,
+                    num_workers=self.__variable.N_GPU,
+                    use_gpu=True,
                     trainer_resources={'CPU': self.__variable.N_CPU})
             },
             tune_config=ray.tune.TuneConfig(
