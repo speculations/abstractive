@@ -12,6 +12,7 @@ import src.modelling.intelligence
 import src.modelling.metrics
 import src.modelling.parameters
 import src.modelling.preprocessing
+import src.modelling.arguments as ag
 
 
 class Architecture:
@@ -37,20 +38,23 @@ class Architecture:
         logging.info(config)
 
         variable = vr.Variable()
-        parameters = src.modelling.parameters.Parameters()
+        arguments = ag.Arguments()
+
+        # Re-designing
+        tokenizer = src.modelling.parameters.Parameters().__call__()
 
         # Metric & Model
-        metrics = src.modelling.metrics.Metrics(parameters=parameters())
-        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters())
+        metrics = src.modelling.metrics.Metrics(tokenizer=tokenizer)
+        intelligence = src.modelling.intelligence.Intelligence(tokenizer=tokenizer)
 
-        # Data & Tokenizer
+        # Data & Tokens
         training = ray.train.get_dataset_shard("train")
         evaluating = ray.train.get_dataset_shard("eval")
-        tokenizer = src.modelling.preprocessing.Preprocessing(parameters=parameters())
+        tokens = src.modelling.preprocessing.Preprocessing(tokenizer=tokenizer)
 
         # Arguments
         args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
-            output_dir=variable.MODEL_OUTPUT_DIRECTORY,
+            output_dir=arguments.MODEL_OUTPUT_DIRECTORY,
             do_train=True,
             do_eval=True,
             eval_strategy='epoch',
@@ -63,7 +67,7 @@ class Architecture:
             num_train_epochs=variable.EPOCHS,
             max_steps=config.get('max_steps_per_epoch') * variable.EPOCHS,
             warmup_steps=0,
-            logging_dir=os.path.join(variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
+            logging_dir=os.path.join(arguments.MODEL_OUTPUT_DIRECTORY, '.logs'),
             no_cuda=False,
             seed=5,
             save_total_limit=2,
@@ -77,9 +81,9 @@ class Architecture:
         # Trainer
         trainer = transformers.Seq2SeqTrainer(
             model_init=intelligence.model, args=args,
-            train_dataset=tokenizer.iterables(part=training, batch_size=variable.TRAIN_BATCH_SIZE),
-            eval_dataset=tokenizer.iterables(part=evaluating, batch_size=variable.VALIDATE_BATCH_SIZE),
-            tokenizer=parameters().tokenizer,
+            train_dataset=tokens.iterables(part=training, batch_size=variable.TRAIN_BATCH_SIZE),
+            eval_dataset=tokens.iterables(part=evaluating, batch_size=variable.VALIDATE_BATCH_SIZE),
+            tokenizer=tokenizer,
             data_collator=intelligence.collator(),
             compute_metrics=metrics.exc
         )
