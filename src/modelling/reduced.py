@@ -53,7 +53,6 @@ class Reduced:
                 "train_loop_config": {
                     'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
                     'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
-                    'per_device_train_batch_size': ray.tune.grid_search([16, 32]),
                     'max_steps_per_epoch': self.__max_steps_per_epoch},
                 "scaling_config": ray.train.ScalingConfig(
                     num_workers=self.__variable.N_GPU,
@@ -69,7 +68,7 @@ class Reduced:
             run_config=ray.train.RunConfig(
                 name='tuning',
                 progress_reporter=ray.tune.CLIReporter(
-                    parameter_columns=['learning_rate', 'weight_decay', 'per_device_training_batch_size', 'num_train_epochs'],
+                    parameter_columns=['learning_rate', 'weight_decay', 'max_steps_per_epoch'],
                     metric_columns=['eval_loss', 'rouge1', 'rouge2', 'rougeLsum', 'median']),
                 checkpoint_config=ray.train.CheckpointConfig(
                     num_to_keep=1,
