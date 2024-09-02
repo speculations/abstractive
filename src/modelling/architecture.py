@@ -41,7 +41,7 @@ class Architecture:
         arguments = ag.Arguments()
 
         # Re-designing
-        tokenizer = src.modelling.parameters.Parameters().__call__()
+        tokenizer = src.modelling.parameters.Parameters()()
 
         # Metric & Model
         metrics = src.modelling.metrics.Metrics(tokenizer=tokenizer)
