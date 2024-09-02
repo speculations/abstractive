@@ -30,12 +30,6 @@ class Preprocessing:
         self.__variable = vr.Variable()
         self.__arguments = ag.Arguments()
 
-        # Logging
-        logging.basicConfig(level=logging.INFO,
-                            format='\n\n%(message)s\n%(asctime)s.%(msecs)03d',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        self.__logger = logging.getLogger(__name__)
-
     def batches(self, blob: datasets.formatting.formatting.LazyBatch) -> transformers.BatchEncoding:
         """
 
@@ -76,7 +70,7 @@ class Preprocessing:
         structure = {'input_ids': torch.LongTensor(inputs['input_ids']),
                      'attention_mask': torch.LongTensor(inputs['attention_mask']),
                      'labels': torch.LongTensor(targets['input_ids'])}
-        self.__logger.info(structure)
+        logging.info(structure)
 
         return structure
 
