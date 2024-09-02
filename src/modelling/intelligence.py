@@ -1,10 +1,10 @@
 """Module intelligence.py"""
-import collections
 import logging
 
 import transformers
 
 import src.elements.variable as vr
+import src.modelling.arguments as ag
 
 
 class Intelligence:
@@ -12,15 +12,16 @@ class Intelligence:
     The model development class.
     """
 
-    def __init__(self, parameters: collections.namedtuple(typename='ModelArchitectureParameters',
-                                                          field_names=['input_prefix', 'checkpoint', 'tokenizer'])):
+    def __init__(self, tokenizer: transformers.PreTrainedTokenizerFast):
         """
 
-        :param parameters: T5 specific parameters
+        :param tokenizer: T5 specific
         """
 
-        self.__parameters = parameters
+        self.__tokenizer = tokenizer
+
         self.__variable = vr.Variable()
+        self.__arguments = ag.Arguments()
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -35,7 +36,7 @@ class Intelligence:
         """
 
         return transformers.DataCollatorForSeq2Seq(
-            tokenizer=self.__parameters.tokenizer, model=self.__parameters.checkpoint)
+            tokenizer=self.__tokenizer, model=self.__arguments.checkpoint)
 
     def model(self):
         """
@@ -44,10 +45,10 @@ class Intelligence:
         """
 
         config = transformers.GenerationConfig.from_pretrained(
-            pretrained_model_name=self.__parameters.checkpoint, **{'max_new_tokens': self.__variable.MAX_NEW_TOKENS})
+            pretrained_model_name=self.__arguments.checkpoint, **{'max_new_tokens': self.__variable.MAX_NEW_TOKENS})
         self.__logger.info('max_length: %s', config.max_length)
         self.__logger.info('max_new_tokens: %s', config.max_new_tokens)
 
         return transformers.AutoModelForSeq2SeqLM.from_pretrained(
-            pretrained_model_name_or_path=self.__parameters.checkpoint, config=config
+            pretrained_model_name_or_path=self.__arguments.checkpoint, config=config
         )
