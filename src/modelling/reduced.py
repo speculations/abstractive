@@ -5,6 +5,7 @@ import ray.data
 import ray.train.torch
 import ray.tune
 import ray.tune.search.bayesopt
+import ray.tune.schedulers as rts
 
 import src.elements.variable as vr
 import src.modelling.architecture
@@ -53,7 +54,11 @@ class Reduced:
         # From Hugging Face Trainer -> Ray Trainer
         trainable = ray.train.torch.TorchTrainer(
             arc.exc,
-            train_loop_config={"learning_rate": 2e-5, "max_steps": numerics()},
+            train_loop_config={
+                'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
+                'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
+                'per_device_train_batch_size': ray.tune.grid_search([16, 32]),
+                'max_steps': numerics()},
             datasets={"train": data["train"], "eval": data["validate"]})
 
         # Tuner
@@ -65,14 +70,15 @@ class Reduced:
                     trainer_resources={'CPU': self.__variable.N_CPU})
             },
             tune_config=ray.tune.TuneConfig(
-                metric='eval_loss', mode='min',
-                # scheduler=self.__settings.scheduler(),
+                metric='eval_loss',
+                mode='min',
+                scheduler=rts.ASHAScheduler(time_attr='training_iteration', max_t=25, grace_period=3),
                 num_samples=1, reuse_actors=True
             ),
             run_config=ray.train.RunConfig(
                 name='tuning',
                 checkpoint_config=ray.train.CheckpointConfig(
-                    num_to_keep=5,
+                    num_to_keep=1,
                     checkpoint_score_attribute='eval_loss',
                     checkpoint_score_order='min')
             )
