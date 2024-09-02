@@ -29,22 +29,22 @@ class Architecture:
     @staticmethod
     def exc(config: dict):
         """
-        Important, this must be a static method.
+        Important, this must be a static method.  Additionally, initialise the model, metrics, and tokenizer
+        within this function
 
         :return:
         """
 
-        print('Is it here?')
-        print(config)
+        logging.info(config)
 
         variable = vr.Variable()
         parameters = src.modelling.parameters.Parameters().parameters
 
-        # Directives
+        # Metric & Model
         metrics = src.modelling.metrics.Metrics(parameters=parameters)
         intelligence = src.modelling.intelligence.Intelligence(parameters=parameters)
 
-        # Data
+        # Data & Tokenizer
         training = ray.train.get_dataset_shard("train")
         evaluating = ray.train.get_dataset_shard("eval")
         tokenizer = src.modelling.preprocessing.Preprocessing(parameters=parameters)
@@ -57,7 +57,7 @@ class Architecture:
             eval_strategy='epoch',
             save_strategy='epoch',
             logging_strategy='epoch',
-            learning_rate=config['learning_rate'],
+            learning_rate=config.get('learning_rate', 5e-3),
             weight_decay=variable.WEIGHT_DECAY,
             per_device_train_batch_size=variable.TRAIN_BATCH_SIZE,
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
