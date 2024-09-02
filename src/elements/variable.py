@@ -80,4 +80,4 @@ class Variable(typing.NamedTuple):
     N_GPU: int = 1
     N_TRIALS: int = 2
     MAX_STEPS: int = -1
-    MODEL_OUTPUT_DIRECTORY: str = os.path.join(config.Config().warehouse, 't5')
+    MODEL_OUTPUT_DIRECTORY: str = os.path.join(config.Config().warehouse)
