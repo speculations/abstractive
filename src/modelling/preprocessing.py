@@ -1,5 +1,4 @@
 """Module preprocessing.py"""
-import collections
 import logging
 
 import datasets.formatting.formatting
@@ -8,6 +7,7 @@ import torch
 import transformers
 
 import src.elements.variable as vr
+import src.modelling.arguments as ag
 
 
 class Preprocessing:
@@ -19,18 +19,16 @@ class Preprocessing:
     architecture expectations.
     """
 
-    def __init__(self, parameters: collections.namedtuple(typename='ModelArchitectureParameters',
-                                                          field_names=['input_prefix', 'checkpoint', 'tokenizer'])):
+    def __init__(self, tokenizer: transformers.PreTrainedTokenizerFast):
         """
 
-        :param parameters: T5 specific parameters
+        :param tokenizer: T5 specific
         """
+
+        self.__tokenizer = tokenizer
 
         self.__variable = vr.Variable()
-
-        # The T5 specific parameters
-        self.__parameters = parameters
-        self.__tokenizer: transformers.PreTrainedTokenizerFast = self.__parameters.tokenizer
+        self.__arguments = ag.Arguments()
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -46,7 +44,7 @@ class Preprocessing:
         """
 
         # Independent Variable
-        inputs = [self.__parameters.input_prefix + segment for segment in blob['text']]
+        inputs = [self.__arguments.input_prefix + segment for segment in blob['text']]
         structure: transformers.BatchEncoding = self.__tokenizer(
             text=inputs, max_length=self.__variable.MAX_LENGTH_INPUT, truncation=True)
 
@@ -66,7 +64,7 @@ class Preprocessing:
         """
 
         # Input: A dictionary structure, wherein the keys are <input_ids> & <attention_mask>
-        entries = [self.__parameters.input_prefix + segment for segment in blob['text']]
+        entries = [self.__arguments.input_prefix + segment for segment in blob['text']]
         inputs = self.__tokenizer(text=entries, max_length=self.__variable.MAX_LENGTH_INPUT,
                                      truncation=True, padding='max_length')
 
