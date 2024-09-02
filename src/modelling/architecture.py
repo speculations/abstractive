@@ -61,7 +61,7 @@ class Architecture:
             per_device_train_batch_size=variable.TRAIN_BATCH_SIZE,
             per_device_eval_batch_size=variable.VALIDATE_BATCH_SIZE,
             num_train_epochs=variable.EPOCHS,
-            max_steps=config.get('max_steps'),
+            max_steps=config.get('max_steps_per_epoch') * variable.EPOCHS,
             warmup_steps=0,
             logging_dir=os.path.join(variable.MODEL_OUTPUT_DIRECTORY, '.logs'),
             no_cuda=False,
