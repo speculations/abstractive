@@ -37,16 +37,16 @@ class Architecture:
         logging.info(config)
 
         variable = vr.Variable()
-        parameters = src.modelling.parameters.Parameters().parameters
+        parameters = src.modelling.parameters.Parameters()
 
         # Metric & Model
-        metrics = src.modelling.metrics.Metrics(parameters=parameters)
-        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters)
+        metrics = src.modelling.metrics.Metrics(parameters=parameters())
+        intelligence = src.modelling.intelligence.Intelligence(parameters=parameters())
 
         # Data & Tokenizer
         training = ray.train.get_dataset_shard("train")
         evaluating = ray.train.get_dataset_shard("eval")
-        tokenizer = src.modelling.preprocessing.Preprocessing(parameters=parameters)
+        tokenizer = src.modelling.preprocessing.Preprocessing(parameters=parameters())
 
         # Arguments
         args: transformers.Seq2SeqTrainingArguments = transformers.Seq2SeqTrainingArguments(
@@ -79,7 +79,7 @@ class Architecture:
             model_init=intelligence.model, args=args,
             train_dataset=tokenizer.iterables(part=training, batch_size=variable.TRAIN_BATCH_SIZE),
             eval_dataset=tokenizer.iterables(part=evaluating, batch_size=variable.VALIDATE_BATCH_SIZE),
-            tokenizer=parameters.tokenizer,
+            tokenizer=parameters().tokenizer,
             data_collator=intelligence.collator(),
             compute_metrics=metrics.exc
         )
