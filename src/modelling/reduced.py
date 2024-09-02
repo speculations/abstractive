@@ -4,14 +4,11 @@ import logging
 import ray.data
 import ray.train.torch
 import ray.tune
-import ray.tune.search.bayesopt
 import ray.tune.schedulers as rts
 
+import src.data.interface
 import src.elements.variable as vr
 import src.modelling.architecture
-import src.modelling.numerics
-import src.modelling.settings
-import src.data.interface
 
 
 class Reduced:
@@ -26,11 +23,8 @@ class Reduced:
 
         self.__variable = vr.Variable()
 
-        # Settings
-        self.__settings = src.modelling.settings.Settings()
-
         # Data -> data: dict[str, MaterializedDataset]
-        self.__data = src.data.interface.Interface().get_rays()
+        self.__data: dict[str, ray.data.dataset.MaterializedDataset] = src.data.interface.Interface().get_rays()
         self.__max_steps_per_epoch: int = self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU)
 
     def exc(self):
