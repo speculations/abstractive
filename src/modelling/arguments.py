@@ -1,6 +1,8 @@
-import typing
-import config
+"""Module arguments.py"""
 import os
+import typing
+
+import config
 
 
 class Arguments(typing.NamedTuple):
