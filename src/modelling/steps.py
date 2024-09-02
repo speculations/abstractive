@@ -35,7 +35,7 @@ class Steps:
 
         # Modelling
         results: ray.tune.ResultGrid = src.modelling.reduced.Reduced().exc()
-        self.__logger.info(results.__dir__())
+        self.__logger.info(dir(results))
 
         best = results.get_best_result()
         self.__logger.info(best.checkpoint)
