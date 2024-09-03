@@ -51,8 +51,8 @@ class Reduced:
             trainable,
             param_space={
                 "train_loop_config": {
-                    'learning_rate': ray.tune.uniform(lower=5e-3, upper=1e-1),
-                    'weight_decay': ray.tune.uniform(lower=0.0, upper=0.25),
+                    'learning_rate': ray.tune.grid_search([0.00002, 0.0002, 0.002, 0.02]),
+                    'weight_decay': ray.tune.grid_search([0.0, 0.1, 0.2]),
                     'max_steps_per_epoch': self.__max_steps_per_epoch},
                 "scaling_config": ray.train.ScalingConfig(
                     num_workers=self.__variable.N_GPU,
@@ -62,7 +62,7 @@ class Reduced:
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss',
                 mode='min',
-                scheduler=rts.ASHAScheduler(time_attr='training_iteration', max_t=25, grace_period=3),
+                scheduler=rts.ASHAScheduler(time_attr='training_iteration', max_t=20, grace_period=1),
                 num_samples=1, reuse_actors=True
             ),
             run_config=ray.train.RunConfig(
