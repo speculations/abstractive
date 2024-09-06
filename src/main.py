@@ -4,6 +4,7 @@ import os
 import sys
 
 import torch
+import ray
 
 
 def main() -> None:
@@ -18,6 +19,9 @@ def main() -> None:
 
     # Device Selection: Setting a graphics processing unit as the default device
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+    # Ray
+    ray.init(dashboard_host='172.17.0.2', dashboard_port=8265)
 
     # Device Message
     if device == 'cuda':
