@@ -37,27 +37,28 @@ Subsequently, run a container, i.e., an instance, of the image `text` via:
 <br>
 
 ```shell
-docker run --rm --gpus all -i -t -p 127.0.0.1:10000:8888 -w /app 
-	--mount type=bind,src="$(pwd)",target=/app text
+docker run --rm --gpus all --shm-size=16gb -i -t 
+  -p 127.0.0.1:6007:6007 -p 127.0.0.1:6006:6006 
+    -p 172.17.0.2:8265:8265 -p 172.17.0.2:6379:6379 -w /app 
+	    --mount type=bind,src="$(pwd)",target=/app text
+```
+
+or
+
+```shell
+docker run --rm --gpus all --shm-size=16gb -i -t 
+  -p 6007:6007 -p 6006:6006 -p 8265:8265 -p 6379:6379  
+    -w /app --mount type=bind,src="$(pwd)",target=/app text
 ```
 
 <br>
 
-Herein, `-p 10000:8888` maps the host port `10000` to container port `8888`.  Note, the container's working environment, i.e., -w, must be inline with this project's top directory.  Additionally
+Herein, `-p 6007:6007` maps the host port `6007` to container port `6007`.  Note, the container's working environment, i.e., -w, must be inline with this project's top directory.  Additionally
 
 * --rm: [automatically remove container](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the)
 * -i: [interact](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di)
 * -t: [tag](https://docs.docker.com/get-started/02_our_app/#:~:text=Finally%2C%20the-,%2Dt,-flag%20tags%20your)
 * -p: [publish](https://docs.docker.com/engine/reference/commandline/run/#:~:text=%2D%2Dpublish%20%2C-,%2Dp,-Publish%20a%20container%E2%80%99s)
-
-<br>
-
-An option
-
-```shell
-docker run --rm --gpus all --shm-size=16gb -i -t -p 8050:8050 -p 6006:6006 -p 8265:8265 -w /app --mount type=bind,src="$(pwd)",target=/app text
-```
-
 
 <br>
 
@@ -85,15 +86,75 @@ IDEA** set up involves connecting to a machine's Docker [daemon](https://www.jet
 
 **Visual Studio Code** has its container attachment instructions; study [Attach Container](https://code.visualstudio.com/docs/devcontainers/attach-container).
 
+<br>
+<br>
+
+## Model Development
+
+> [!NOTE]
+> [Tuners](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html) can also be used to launch hyperparameter tuning without using Ray Train, e.g., [ray.train.torch.TorchTrainer](https://docs.ray.io/en/latest/train/api/doc/ray.train.torch.TorchTrainer.html); [instead](https://huggingface.co/docs/transformers/main_classes/trainer).
+
+<br>
+
+### Optimisation, etc.
+
+The progress of a model training exercise is observable via TensorBoard
+
+```shell
+tensorboard --logdir /tmp/ray/session_{datetime}_{host.code}/artifacts/{datetime}/tuning/driver_artifacts --bind_all
+```
+
+Subsequently, a link of the form `http://...:6007/` or `http://...:6006/` is printed.  Access the underlying pages via a browser.  It might be necessary to switch to `http://localhost:6007/` or `http://localhost:6006/`
+
+<br>
+
+### Computation Metrics
+
+Via [Ray Dashboard](https://docs.ray.io/en/latest/ray-observability/getting-started.html), aided by Prometheus & Grafana[^tracking]; the set-up for the latter pair is upcoming.  Ensure [usage statistics sharing/collection is disabled](https://docs.ray.io/en/latest/cluster/usage-stats.html).  Options
+
+* os.environ['RAY_USAGE_STATS_ENABLED']='0'
+* Either
+  * ray start --disable-usage-stats --head --dashboard-host=0.0.0.0 --dashboard-port=8265
+  * ray start --disable-usage-stats --head --dashboard-host=172.17.0.2 --dashboard-port=8265
+  * etc.
+
+The computation metrics will be accessible via
+* localhost:8265
+* localhost:6379
+
+<br>
+
+### Steps & Epochs
+
+The formulae in focus are
+
+> * max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)
+> * max_steps = max_steps_per_epoch * self.__n_epochs
+
+<br>
+
+### Warnings
+
+* Warning: Environment variable NCCL_ASYNC_ERROR_HANDLING is deprecated; use TORCH_NCCL_ASYNC_ERROR_HANDLING instead (function getCvarString)
+
+* Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+
+* There were missing keys in the checkpoint model loaded: ['encoder.embed_tokens.weight', 'decoder.embed_tokens.weight', 'lm_head.weight'].
+
+* UserWarning: Using the model-agnostic default `max_length` (=20) to control the generation length. We recommend setting `max_new_tokens` to control the maximum length of the generation.
+
 
 <br>
 <br>
+
 
 ## Code Analysis
 
 The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.
 
 The sections herein outline remote code analysis.
+
+<br>
 
 ### pylint
 
@@ -152,52 +213,6 @@ python -m flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 -
 
 inspects complexity.
 
-<br>
-<br>
-
-## Notes
-
-### Tune
-
-> [!NOTE]
-> [Tuners](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html) can also be used to launch hyperparameter tuning without using Ray Train, e.g., [ray.train.torch.TorchTrainer](https://docs.ray.io/en/latest/train/api/doc/ray.train.torch.TorchTrainer.html); [instead](https://huggingface.co/docs/transformers/main_classes/trainer).
-
-For the ray board
-
-```bash
-127.0.0.1:8265
-```
-
-If the ...
-
-```shell
-tensorboard --logdir /tmp/ray/session_2024-08-18_12-20-14_323079_69424/artifacts/2024-08-18_12-20-26/tuning/driver_artifacts
-tensorboard --logdir /tmp/ray/session_2024-08-18_17-05-33_670675_9/artifacts/2024-08-18_17-05-44/tuning/driver_artifacts
-```
-
-Note
-* RunConfig(storage_path='', ...) for [specifying the parent directory](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html) of the trials data
-
-<br>
-
-### Address
-
-**steps & epochs**
-> max_steps_per_epoch = self.__source['train'].shape[0] // (variable.TRAIN_BATCH_SIZE * variable.N_GPU)<br>
-> max_steps = max_steps_per_epoch * self.__n_epochs
-
-<br>
-
-### Warnings
-
-* Warning: Environment variable NCCL_ASYNC_ERROR_HANDLING is deprecated; use TORCH_NCCL_ASYNC_ERROR_HANDLING instead (function getCvarString)
-
-* Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
-
-* There were missing keys in the checkpoint model loaded: ['encoder.embed_tokens.weight', 'decoder.embed_tokens.weight', 'lm_head.weight'].
-
-* UserWarning: Using the model-agnostic default `max_length` (=20) to control the generation length. We recommend setting `max_new_tokens` to control the maximum length of the generation.
-
 
 <br>
 <br>
@@ -205,27 +220,36 @@ Note
 
 ## References
 
-Articles:
+### Articles
 
 * [T5: Text-To-Text Transfer Transformer](https://huggingface.co/docs/transformers/tasks/summarization); [T5](https://huggingface.co/google-t5).
 * [Population Based Training](https://deepmind.google/discover/blog/population-based-training-of-neural-networks/), ([paper](https://arxiv.org/abs/1711.09846))
 
 <br>
 
-Critical Classes & Utilities:
+### Modelling
+
+#### Configuring, etc.
 
 * [AutoModel.from_pretrained](https://huggingface.co/docs/transformers/v4.42.0/en/model_doc/auto#transformers.AutoModel.from_pretrained)
   * [pre-trained configuration](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/configuration#transformers.PretrainedConfig)
   * [PreTrainedTokenizerFast](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/tokenizer#transformers.PreTrainedTokenizerFast)
 
-* [Text Generation](https://huggingface.co/docs/transformers/main_classes/text_generation)
-  * Beware, model generation configuration settings are undergoing changes.  Instead: [default text generation configuration.](https://huggingface.co/docs/transformers/generation_strategies#default-text-generation-configuration)
+* [Configurations of tasks that include text generation steps](https://huggingface.co/docs/transformers/main_classes/text_generation)
+  * Beware, configuration settings methods are undergoing changes.  Instead: [default text generation configuration.](https://huggingface.co/docs/transformers/generation_strategies#default-text-generation-configuration)
   * [generation configuration](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/text_generation#transformers.GenerationConfig)
   * [from_pretrained](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/text_generation#transformers.GenerationConfig.from_pretrained)
 
-* Modelling
+<br>
+
+#### Setting-up
   * [Data Splitting](https://huggingface.co/docs/datasets/v2.20.0/en/package_reference/main_classes#datasets.Dataset.train_test_split)
   * [Seq2SeqTrainer](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/trainer#transformers.Seq2SeqTrainer)
+
+<br>
+
+#### Metrics
+
   * [metrics & batch_decode](https://huggingface.co/docs/transformers/main_classes/tokenizer#transformers.PreTrainedTokenizer.batch_decode)
   * [rouge](https://huggingface.co/spaces/evaluate-metric/rouge)
   * [Utilities for Trainer: EvalPrediction](https://huggingface.co/docs/transformers/v4.42.0/en/internal/trainer_utils#transformers.EvalPrediction)
@@ -233,7 +257,7 @@ Critical Classes & Utilities:
 
 <br>
 
-Hyperparameters
+#### Hyperparameters
 
 * [Hyperparameter Tuning with Ray Tune](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html)
   * [Getting Started with Ray Tune](https://docs.ray.io/en/latest/tune/getting-started.html)
@@ -250,8 +274,7 @@ Hyperparameters
 
 <br>
 
-Logging: Model & System
-
+#### Logging: Model & System
 * [Logging and Outputs in Tune](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html)
   * And, using TensorBoard
 * [TensorboardX](https://tensorboardx.readthedocs.io/en/latest/tutorial.html#what-is-tensorboard-x) (Pytorch)
@@ -261,8 +284,7 @@ Logging: Model & System
 
 <br>
 
-Distributed Training
-
+#### Distributed Training
 * [Distributed Communication](https://docs.w3cub.com/pytorch/distributed.html)
 * [PyTorch Distributed Overview](https://pytorch.org/tutorials/beginner/dist_overview.html)
 * [Get Started with Distributed Training using Hugging Face Transformers](https://docs.ray.io/en/latest/train/getting-started-transformers.html)
@@ -270,9 +292,8 @@ Distributed Training
 
 <br>
 
-File Formats (Note $\rightarrow$ GPT: Generative Pre-trained Transformer)
-
-* GGUF: GPT-Generated Unified Format
+#### File Formats
+* GGUF: GPT-Generated Unified Format[^gpt]
 * GGML: GPT-Generated Model Language
 * [What is GGUF and GGML?](https://medium.com/@phillipgimmi/what-is-gguf-and-ggml-e364834d241c)
 * [About GGUF](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md)
@@ -280,7 +301,9 @@ File Formats (Note $\rightarrow$ GPT: Generative Pre-trained Transformer)
 * [to GGUF discussion](https://github.com/ggerganov/llama.cpp/discussions/2948)
 * [Hugging Face & GGUF](https://huggingface.co/docs/hub/gguf)
 
-Interface
+<br>
+
+#### Interface
 * [Open WebUI Getting Started](https://docs.openwebui.com/getting-started/)
   * [cf.](https://medium.com/@edu.ukulelekim/how-to-locally-deploy-ollama-and-open-webui-with-docker-compose-318f0582e01f)
   * https://github.com/open-webui/open-webui
@@ -302,3 +325,7 @@ Interface
 
 <br>
 <br>
+
+[^tracking]: [Python, Grafana, Prometheus, Docker](https://dev.to/thedevtimeline/setup-grafana-with-prometheus-for-python-projects-using-docker-4o5g)
+
+[^gpt]: GPT: Generative Pre-trained Transformer

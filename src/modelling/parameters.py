@@ -1,18 +1,14 @@
 """Module parameters.py"""
-import collections
-
 import transformers
+
+import src.modelling.arguments
 
 
 class Parameters:
     """
-    For setting terms that are particular to a pre-trained model
-    architecture type; T5 specific parameters.
+    Rename
 
-    input_prefix: str = 'summarize: '
-    checkpoint: str = 'google-t5/t5-small'
-    tokenizer: transformers.PreTrainedTokenizerFast = (
-        transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint))
+    This class sets up the model's tokenizer.
     """
 
     def __init__(self):
@@ -20,14 +16,14 @@ class Parameters:
         Constructor
         """
 
-        checkpoint: str = 'google-t5/t5-small'
-        input_prefix: str
-        tokenizer: transformers.PreTrainedTokenizerFast
-        ModelArchitectureParameters = collections.namedtuple(
-            typename='ModelArchitectureParameters',
-            field_names=['input_prefix', 'checkpoint', 'tokenizer'])
+        self.__arguments: src.modelling.arguments.Arguments = src.modelling.arguments.Arguments()
 
-        self.parameters = ModelArchitectureParameters(
-            input_prefix='summarize',
-            checkpoint=checkpoint,
-            tokenizer=transformers.AutoTokenizer.from_pretrained(pretrained_model_name_or_path=checkpoint))
+    def __call__(self):
+        """
+
+        :return:
+            tokenizer: transformers.PreTrainedTokenizerFast
+        """
+
+        return transformers.AutoTokenizer.from_pretrained(
+                pretrained_model_name_or_path=self.__arguments.checkpoint)

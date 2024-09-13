@@ -1,7 +1,7 @@
 """Module storage.py"""
 import src.functions.directories
 
-import src.elements.variable as vr
+import src.modelling.arguments as ag
 
 
 class Storage:
@@ -14,11 +14,10 @@ class Storage:
         Constructor
         """
 
+        self.__arguments = ag.Arguments()
+
         # The directories instance; for deleting, re-creating, directories.
         self.__directories = src.functions.directories.Directories()
-
-        # A set of values for machine learning model development
-        self.__variable = vr.Variable()
 
     def exc(self) -> None:
         """
@@ -26,5 +25,5 @@ class Storage:
         :return:
         """
 
-        self.__directories.cleanup(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
-        self.__directories.create(path=self.__variable.MODEL_OUTPUT_DIRECTORY)
+        self.__directories.cleanup(path=self.__arguments.MODEL_OUTPUT_DIRECTORY)
+        self.__directories.create(path=self.__arguments.MODEL_OUTPUT_DIRECTORY)
