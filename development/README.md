@@ -217,27 +217,36 @@ inspects complexity.
 
 ## References
 
-Articles:
+### Articles
 
 * [T5: Text-To-Text Transfer Transformer](https://huggingface.co/docs/transformers/tasks/summarization); [T5](https://huggingface.co/google-t5).
 * [Population Based Training](https://deepmind.google/discover/blog/population-based-training-of-neural-networks/), ([paper](https://arxiv.org/abs/1711.09846))
 
 <br>
 
-Critical Classes & Utilities:
+### Modelling
+
+#### Configuring, etc.
 
 * [AutoModel.from_pretrained](https://huggingface.co/docs/transformers/v4.42.0/en/model_doc/auto#transformers.AutoModel.from_pretrained)
   * [pre-trained configuration](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/configuration#transformers.PretrainedConfig)
   * [PreTrainedTokenizerFast](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/tokenizer#transformers.PreTrainedTokenizerFast)
 
-* [Text Generation](https://huggingface.co/docs/transformers/main_classes/text_generation)
-  * Beware, model generation configuration settings are undergoing changes.  Instead: [default text generation configuration.](https://huggingface.co/docs/transformers/generation_strategies#default-text-generation-configuration)
+* [Configurations of tasks that include text generation steps](https://huggingface.co/docs/transformers/main_classes/text_generation)
+  * Beware, configuration settings methods are undergoing changes.  Instead: [default text generation configuration.](https://huggingface.co/docs/transformers/generation_strategies#default-text-generation-configuration)
   * [generation configuration](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/text_generation#transformers.GenerationConfig)
   * [from_pretrained](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/text_generation#transformers.GenerationConfig.from_pretrained)
 
-* Modelling
+<br>
+
+#### Setting-up
   * [Data Splitting](https://huggingface.co/docs/datasets/v2.20.0/en/package_reference/main_classes#datasets.Dataset.train_test_split)
   * [Seq2SeqTrainer](https://huggingface.co/docs/transformers/v4.42.0/en/main_classes/trainer#transformers.Seq2SeqTrainer)
+
+<br>
+
+#### Metrics
+
   * [metrics & batch_decode](https://huggingface.co/docs/transformers/main_classes/tokenizer#transformers.PreTrainedTokenizer.batch_decode)
   * [rouge](https://huggingface.co/spaces/evaluate-metric/rouge)
   * [Utilities for Trainer: EvalPrediction](https://huggingface.co/docs/transformers/v4.42.0/en/internal/trainer_utils#transformers.EvalPrediction)
@@ -245,7 +254,7 @@ Critical Classes & Utilities:
 
 <br>
 
-Hyperparameters
+#### Hyperparameters
 
 * [Hyperparameter Tuning with Ray Tune](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html)
   * [Getting Started with Ray Tune](https://docs.ray.io/en/latest/tune/getting-started.html)
@@ -262,7 +271,7 @@ Hyperparameters
 
 <br>
 
-Logging: Model & System
+#### Logging: Model & System
 * [Logging and Outputs in Tune](https://docs.ray.io/en/latest/tune/tutorials/tune-output.html)
   * And, using TensorBoard
 * [TensorboardX](https://tensorboardx.readthedocs.io/en/latest/tutorial.html#what-is-tensorboard-x) (Pytorch)
@@ -272,7 +281,7 @@ Logging: Model & System
 
 <br>
 
-Distributed Training
+#### Distributed Training
 * [Distributed Communication](https://docs.w3cub.com/pytorch/distributed.html)
 * [PyTorch Distributed Overview](https://pytorch.org/tutorials/beginner/dist_overview.html)
 * [Get Started with Distributed Training using Hugging Face Transformers](https://docs.ray.io/en/latest/train/getting-started-transformers.html)
@@ -280,8 +289,8 @@ Distributed Training
 
 <br>
 
-File Formats (Note $\rightarrow$ GPT: Generative Pre-trained Transformer)
-* GGUF: GPT-Generated Unified Format
+#### File Formats
+* GGUF: GPT-Generated Unified Format[^gpt]
 * GGML: GPT-Generated Model Language
 * [What is GGUF and GGML?](https://medium.com/@phillipgimmi/what-is-gguf-and-ggml-e364834d241c)
 * [About GGUF](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md)
@@ -289,7 +298,9 @@ File Formats (Note $\rightarrow$ GPT: Generative Pre-trained Transformer)
 * [to GGUF discussion](https://github.com/ggerganov/llama.cpp/discussions/2948)
 * [Hugging Face & GGUF](https://huggingface.co/docs/hub/gguf)
 
-Interface
+<br>
+
+#### Interface
 * [Open WebUI Getting Started](https://docs.openwebui.com/getting-started/)
   * [cf.](https://medium.com/@edu.ukulelekim/how-to-locally-deploy-ollama-and-open-webui-with-docker-compose-318f0582e01f)
   * https://github.com/open-webui/open-webui
@@ -312,5 +323,6 @@ Interface
 <br>
 <br>
 
-[^tracking]: [Python, Grafana, Prometheus, Docker](https://dev.to/thedevtimeline/setup-grafana-with-prometheus-for-python-projects-using-docker-4o5g
-)
+[^tracking]: [Python, Grafana, Prometheus, Docker](https://dev.to/thedevtimeline/setup-grafana-with-prometheus-for-python-projects-using-docker-4o5g)
+
+[^gpt]: GPT: Generative Pre-trained Transformer
