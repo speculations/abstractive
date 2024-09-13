@@ -9,7 +9,10 @@ import ray
 
 def main() -> None:
     """
-    Entry point
+
+    Notes
+    -----
+    https://docs.ray.io/en/latest/cluster/usage-stats.html
 
     :return:
         None
@@ -37,7 +40,6 @@ def main() -> None:
     src.functions.cache.Cache().exc()
 
 
-# noinspection DuplicatedCode
 if __name__ == '__main__':
 
     # Paths
@@ -53,6 +55,7 @@ if __name__ == '__main__':
     # Activate graphics processing units
     os.environ['CUDA_VISIBLE_DEVICES']='0'
     os.environ['TOKENIZERS_PARALLELISM']='true'
+    os.environ['RAY_USAGE_STATS_ENABLED']='0'
 
     # Modules
     import src.functions.cache
