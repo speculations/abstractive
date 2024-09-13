@@ -94,6 +94,7 @@ IDEA** set up involves connecting to a machine's Docker [daemon](https://www.jet
 > [!NOTE]
 > [Tuners](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html) can also be used to launch hyperparameter tuning without using Ray Train, e.g., [ray.train.torch.TorchTrainer](https://docs.ray.io/en/latest/train/api/doc/ray.train.torch.TorchTrainer.html); [instead](https://huggingface.co/docs/transformers/main_classes/trainer).
 
+<br>
 
 ### Optimisation, etc.
 
@@ -152,6 +153,8 @@ The formulae in focus are
 The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.
 
 The sections herein outline remote code analysis.
+
+<br>
 
 ### pylint
 
