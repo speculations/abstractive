@@ -89,17 +89,23 @@ IDEA** set up involves connecting to a machine's Docker [daemon](https://www.jet
 <br>
 <br>
 
-## In Focus
+## Model Development
 
 > [!NOTE]
 > [Tuners](https://docs.ray.io/en/latest/train/user-guides/hyperparameter-optimization.html) can also be used to launch hyperparameter tuning without using Ray Train, e.g., [ray.train.torch.TorchTrainer](https://docs.ray.io/en/latest/train/api/doc/ray.train.torch.TorchTrainer.html); [instead](https://huggingface.co/docs/transformers/main_classes/trainer).
 
 
-### Remote Environments
-
 ### Optimisation, etc.
 
-The tools include:
+The progress of a model training exercise is observable via TensorBoard
+
+```shell
+tensorboard --logdir /tmp/ray/session_{datetime}_{host.code}/artifacts/{datetime}/tuning/driver_artifacts --bind_all
+```
+
+Subsequently, a link of the form `http://...:6007/` or `http://...:6006/` is printed.  Access the underlying pages via a browser.  It might be necessary to switch to `http://localhost:6007/` or `http://localhost:6006/`
+
+
 * TensorBoard
   * http://localhost:6006, run `tensorboard --logdir /tmp/ray/...` at the end of the experiment.
 * Ray Dashboard
