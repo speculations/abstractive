@@ -1,5 +1,6 @@
 """Module assemble.py"""
 import os
+import logging
 
 import ray.data
 import ray.train.torch
@@ -27,6 +28,7 @@ class Reduced:
         self.__data: dict[str, ray.data.dataset.MaterializedDataset] = src.data.interface.Interface().get_rays()
         self.__max_steps_per_epoch: int = (
                 self.__data['train'].count() // (self.__variable.TRAIN_BATCH_SIZE * self.__variable.N_GPU))
+        logging.info('The maximum steps per epoch: %s', self.__max_steps_per_epoch)
 
     def exc(self):
         """
@@ -53,7 +55,7 @@ class Reduced:
             param_space={
                 "train_loop_config": {
                     'learning_rate': ray.tune.grid_search([0.0001, 0.0002]),
-                    'weight_decay': ray.tune.grid_search([0.1, 0.2]),
+                    'weight_decay': ray.tune.grid_search([0.1]),
                     'max_steps_per_epoch': self.__max_steps_per_epoch},
                 "scaling_config": ray.train.ScalingConfig(
                     num_workers=self.__variable.N_GPU,
@@ -63,7 +65,7 @@ class Reduced:
             tune_config=ray.tune.TuneConfig(
                 metric='eval_loss',
                 mode='min',
-                scheduler=rts.ASHAScheduler(time_attr='training_iteration', max_t=100, grace_period=1),
+                scheduler=rts.ASHAScheduler(time_attr='training_iteration', max_t=5, grace_period=1),
                 num_samples=1, reuse_actors=True
             ),
             run_config=ray.train.RunConfig(
