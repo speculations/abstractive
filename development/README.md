@@ -105,15 +105,21 @@ tensorboard --logdir /tmp/ray/session_{datetime}_{host.code}/artifacts/{datetime
 
 Subsequently, a link of the form `http://...:6007/` or `http://...:6006/` is printed.  Access the underlying pages via a browser.  It might be necessary to switch to `http://localhost:6007/` or `http://localhost:6006/`
 
+<br>
 
-* TensorBoard
-  * http://localhost:6006, run `tensorboard --logdir /tmp/ray/...` at the end of the experiment.
-* Ray Dashboard
-  * localhost:8265, localhost:6379, run `ray start --disable-usage-stats --head --dashboard-host=0.0.0.0` after ...
-  * [Observability](https://docs.ray.io/en/latest/ray-observability/getting-started.html)
+### Computation Metrics
 
-Upcoming:
-* Prometheus & Grafana[^tracking]
+Via [Ray Dashboard](https://docs.ray.io/en/latest/ray-observability/getting-started.html), aided by Prometheus & Grafana[^tracking]; the set-up for the latter pair is upcoming.  Ensure [usage statistics sharing/collection is disabled](https://docs.ray.io/en/latest/cluster/usage-stats.html).  Options
+
+* os.environ['RAY_USAGE_STATS_ENABLED']='0'
+* Either
+  * ray start --disable-usage-stats --head --dashboard-host=0.0.0.0 --dashboard-port=8265
+  * ray start --disable-usage-stats --head --dashboard-host=172.17.0.2 --dashboard-port=8265
+  * etc.
+
+The computation metrics will be accessible via
+* localhost:8265
+* localhost:6379
 
 <br>
 
