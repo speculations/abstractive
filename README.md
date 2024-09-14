@@ -31,10 +31,10 @@ A repository focusing on a single model architecture only.  **This is a Design I
 
 Approach: huggingface.co transformers $+$ ray.io trainer & tuner $\rightarrow$
 
-* TorchTrainer
-  -[ ] huggingface.co trainer
-  -[ ] data
-* Tuner
+* TorchTrainer: receives
+  * transformers.Seq2SeqTrainer
+  * data
+* Tuner: for setting
   * parameter space: training loop configuration, scaling/resources configuration
   * TuneConfig: objective function, optimisation scheduler, etc.
   * RunConfig: storage, checkpoints
