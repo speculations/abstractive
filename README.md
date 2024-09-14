@@ -29,6 +29,16 @@ match architecture:
 
 A repository focusing on a single model architecture only.  **This is a Design II repository.**
 
+Approach: huggingface.co transformers $+$ ray.io trainer & tuner
+
+* TorchTrainer
+  -[ ] huggingface.co trainer
+  -[ ] data
+* Tuner
+  * parameter space: training loop configuration, scaling/resources configuration
+  * TuneConfig: objective function, optimisation scheduler, etc.
+  * RunConfig: storage, checkpoints
+
 <br>
 <br>
 
