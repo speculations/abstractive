@@ -27,7 +27,7 @@ match architecture:
 
 #### Design II
 
-A repository will focus on a single model architecture only.  **This is a Design II repository.**
+A repository focusing on a single model architecture only.  **This is a Design II repository.**
 
 <br>
 <br>
