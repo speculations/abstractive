@@ -29,7 +29,7 @@ match architecture:
 
 A repository focusing on a single model architecture only.  **This is a Design II repository.**
 
-Approach: huggingface.co transformers $+$ ray.io trainer & tuner
+Approach: huggingface.co transformers $+$ ray.io trainer & tuner $\rightarrow$
 
 * TorchTrainer
   -[ ] huggingface.co trainer
@@ -38,6 +38,9 @@ Approach: huggingface.co transformers $+$ ray.io trainer & tuner
   * parameter space: training loop configuration, scaling/resources configuration
   * TuneConfig: objective function, optimisation scheduler, etc.
   * RunConfig: storage, checkpoints
+* **Elsewhere**
+  * A set-up for hyperparameter optimisation via [Population Based Training](https://docs.ray.io/en/latest/tune/api/schedulers.html#population-based-training-tune-schedulers-populationbasedtraining) 
+
 
 <br>
 <br>
